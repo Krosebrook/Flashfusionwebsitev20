@@ -4,7 +4,9 @@
  */
 
 // Main application core
-export { AppCore } from './AppCore';
+// AppCoreOptimized includes: URL-based routing, enhanced performance with React.memo/useMemo,
+// improved error recovery, better memory management, progressive loading, and mobile responsiveness
+export { AppCoreOptimized } from './AppCoreOptimized';
 
 // Modular components
 export { AppSystemInitializer } from './AppSystemInitializer';
