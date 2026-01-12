@@ -3,8 +3,8 @@
  * @version 5.1.0
  */
 
-// Main application core
-export { AppCore } from './AppCore';
+// Main application core (optimized version)
+export { AppCoreOptimized } from './AppCoreOptimized';
 
 // Modular components
 export { AppSystemInitializer } from './AppSystemInitializer';
