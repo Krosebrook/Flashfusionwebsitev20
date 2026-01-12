@@ -2,6 +2,15 @@
 
 Thank you for your interest in contributing to FlashFusion! This document provides guidelines and information for contributors.
 
+> 📚 **Additional Resources:**
+> - [Code of Conduct](../CODE_OF_CONDUCT.md) - Community guidelines
+> - [Security Policy](../SECURITY.md) - Reporting vulnerabilities
+> - [Architecture Guide](../ARCHITECTURE.md) - System architecture
+> - [Testing Guide](../TESTING.md) - Testing guidelines
+> - [Documentation Index](../DOCUMENTATION_INDEX.md) - All documentation
+
+---
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -15,8 +24,9 @@ Thank you for your interest in contributing to FlashFusion! This document provid
 
 1. **Fork and clone the repository**
    ```bash
-   git clone https://github.com/yourusername/flashfusion-app.git
-   cd flashfusion-app
+   # Replace YOUR_USERNAME with your GitHub username
+   git clone https://github.com/YOUR_USERNAME/Flashfusionwebsitev20.git
+   cd Flashfusionwebsitev20
    ```
 
 2. **Install dependencies**
