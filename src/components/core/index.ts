@@ -3,7 +3,9 @@
  * @version 5.1.0
  */
 
-// Main application core (optimized version)
+// Main application core
+// AppCoreOptimized includes: URL-based routing, enhanced performance with React.memo/useMemo,
+// improved error recovery, better memory management, progressive loading, and mobile responsiveness
 export { AppCoreOptimized } from './AppCoreOptimized';
 
 // Modular components
