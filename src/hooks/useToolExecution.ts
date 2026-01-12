@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { ToolExecutionService, type ToolExecutionRequest, type ToolExecutionResult, type ToolUsageRecord, type UserCredits } from '../services/ToolExecutionService';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 /**
  * React hook for tool execution with credit tracking

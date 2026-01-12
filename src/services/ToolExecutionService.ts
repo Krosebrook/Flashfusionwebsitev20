@@ -1,4 +1,4 @@
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { AIService } from './AIService';
 import type { AIProvider } from './AIService';
@@ -242,7 +242,7 @@ class ToolExecutionServiceClass {
    */
   async executeTool(request: ToolExecutionRequest): Promise<ToolExecutionResult> {
     const startTime = Date.now();
-    const executionId = `exec_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const executionId = `exec_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
 
     try {
       // Check credit cost

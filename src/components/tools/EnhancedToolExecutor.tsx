@@ -10,7 +10,7 @@ import { Badge } from '../ui/badge';
 import { Alert, AlertDescription } from '../ui/alert';
 import { useToolExecution, useUserCredits } from '../../hooks/useToolExecution';
 import { Loader2, AlertTriangle, CheckCircle, XCircle, Zap, CreditCard } from 'lucide-react';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 import type { ToolExecutionRequest } from '../../services/ToolExecutionService';
 
 interface EnhancedToolExecutorProps {

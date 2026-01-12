@@ -98,25 +98,25 @@ export const ToolUsageHistory: React.FC<ToolUsageHistoryProps> = ({ userId }) =>
                 {/* Overview Stats */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <StatCard
-                    icon={<Zap />}
+                    icon={Zap}
                     label="Total Executions"
                     value={stats.totalExecutions.toLocaleString()}
                     color="var(--ff-primary)"
                   />
                   <StatCard
-                    icon={<CheckCircle />}
+                    icon={CheckCircle}
                     label="Success Rate"
                     value={`${stats.successRate.toFixed(1)}%`}
                     color="var(--ff-success-500)"
                   />
                   <StatCard
-                    icon={<Award />}
+                    icon={Award}
                     label="Credits Used"
                     value={stats.totalCreditsUsed.toLocaleString()}
                     color="var(--ff-secondary)"
                   />
                   <StatCard
-                    icon={<Clock />}
+                    icon={Clock}
                     label="Avg Time"
                     value={`${(stats.averageProcessingTime / 1000).toFixed(1)}s`}
                     color="var(--ff-info-500)"
@@ -307,11 +307,11 @@ const ToolUsageCard: React.FC<{ record: ToolUsageRecord }> = ({ record }) => {
  * Stat card component
  */
 const StatCard: React.FC<{
-  icon: React.ReactNode;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: string;
   color: string;
-}> = ({ icon, label, value, color }) => {
+}> = ({ icon: Icon, label, value, color }) => {
   return (
     <div
       className="p-4 rounded-lg"
@@ -321,7 +321,9 @@ const StatCard: React.FC<{
       }}
     >
       <div className="flex items-center gap-2 mb-2">
-        <div style={{ color }}>{React.cloneElement(icon as React.ReactElement, { className: 'w-4 h-4' })}</div>
+        <div style={{ color }}>
+          <Icon className="w-4 h-4" />
+        </div>
         <span
           style={{
             color: 'var(--ff-text-secondary)',

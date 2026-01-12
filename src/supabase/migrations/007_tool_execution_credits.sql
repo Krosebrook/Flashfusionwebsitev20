@@ -270,6 +270,9 @@ CREATE POLICY "Service role full access to usage"
 -- ============================================================================
 
 -- Initialize credits for existing users
+-- Note: Uses ON CONFLICT DO NOTHING to preserve existing credit balances
+-- This is intentional - we don't want to reset credits for users who already have them
+-- If you need to update existing users, use the upgrade_user_tier function instead
 INSERT INTO user_credits (user_id, available, used, total, tier, reset_date)
 SELECT 
   id,
