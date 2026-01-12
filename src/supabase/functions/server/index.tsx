@@ -2,6 +2,7 @@ import { Hono } from 'npm:hono';
 import { cors } from 'npm:hono/cors';
 import { logger } from 'npm:hono/logger';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import * as kv from './kv_store.tsx';
 
 const app = new Hono();
 
@@ -181,6 +182,33 @@ app.onError((err, c) => {
     error: 'Internal server error',
     message: err.message 
   }, 500);
+});
+
+// Project Management Endpoints
+app.get('/make-server-88829a40/projects', async (c) => {
+  try {
+    // Get all projects
+    const projects = await kv.getByPrefix('project:');
+    return c.json({ success: true, projects });
+  } catch (error) {
+    console.error('Failed to fetch projects:', error);
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+app.post('/make-server-88829a40/projects', async (c) => {
+  try {
+    const project = await c.req.json();
+    if (!project.id) {
+      return c.json({ success: false, error: 'Project ID required' }, 400);
+    }
+    
+    await kv.set(`project:${project.id}`, project);
+    return c.json({ success: true, project });
+  } catch (error) {
+    console.error('Failed to save project:', error);
+    return c.json({ success: false, error: error.message }, 500);
+  }
 });
 
 // Start the server

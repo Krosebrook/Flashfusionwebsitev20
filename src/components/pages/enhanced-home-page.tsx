@@ -7,6 +7,7 @@ import React, { memo } from 'react';
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';
 import { Badge } from '../ui/badge';
+import { RoadmapTracker } from '../roadmap/RoadmapTracker';
 
 export type PageRoute = 'home' | 'dashboard' | 'tools' | 'projects' | 'deployments' | 
                         'analytics' | 'collaboration' | 'templates' | 'integrations' | 
@@ -80,6 +81,11 @@ export const EnhancedHomePage = memo(({ onNavigate }: EnhancedHomePageProps) => 
           <div className="ff-text-caption">{stat.label}</div>
         </Card>
       ))}
+    </div>
+
+    {/* Product Roadmap */}
+    <div className="ff-fade-in-up">
+      <RoadmapTracker />
     </div>
 
     {/* Featured Tools */}

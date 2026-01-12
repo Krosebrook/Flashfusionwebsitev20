@@ -3,13 +3,14 @@
  * Core application interface with routing and layout management
  */
 
-import React, { memo, Suspense } from 'react';
+import React, { memo, Suspense, useState, useEffect } from 'react';
 import { NavigationHeader } from '../layout/navigation-header';
 import { FlashFusionLoader } from '../ui/flash-fusion-loader';
 import { LiteModeIndicator } from '../ui/lite-mode-indicator';
 import { EnhancedHomePage } from '../pages/enhanced-home-page';
 import { useRouteNavigation } from '../../hooks/use-route-navigation';
 import type { AppMode } from '../../utils/system-detection';
+import { OnboardingFlow } from '../onboarding/OnboardingFlow';
 
 // Import existing pages
 import { Button } from '../ui/button';
@@ -41,6 +42,32 @@ interface FlashFusionInterfaceProps {
 
 export const FlashFusionInterface = memo(({ mode }: FlashFusionInterfaceProps) => {
   const { currentRoute, isTransitioning, navigateToRoute } = useRouteNavigation();
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  useEffect(() => {
+    // Check if user has completed onboarding
+    const hasCompletedOnboarding = localStorage.getItem('ff-onboarding-complete');
+    if (!hasCompletedOnboarding) {
+      setShowOnboarding(true);
+    }
+  }, []);
+
+  const handleOnboardingComplete = (persona: string, intent: string) => {
+    // Save onboarding preferences
+    localStorage.setItem('ff-onboarding-complete', 'true');
+    localStorage.setItem('ff-user-persona', persona);
+    localStorage.setItem('ff-user-intent', intent);
+    setShowOnboarding(false);
+  };
+
+  const handleOnboardingSkip = () => {
+    localStorage.setItem('ff-onboarding-complete', 'true');
+    setShowOnboarding(false);
+  };
+
+  if (showOnboarding) {
+    return <OnboardingFlow onComplete={handleOnboardingComplete} onSkip={handleOnboardingSkip} />;
+  }
 
   const renderMainContent = () => {
     if (isTransitioning) {

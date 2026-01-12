@@ -42,6 +42,8 @@ import { WaitlistSystem } from '../waitlist/WaitlistSystem';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 import { PricingDropdownMenu } from '../pricing/PricingDropdownMenu';
 import { FAQDropdownSection } from '../faq/FAQDropdownSection';
+import { PersonaUseCases } from './PersonaUseCases';
+import { DeploymentMarquee } from './DeploymentMarquee';
 import type { AuthUser } from '../../hooks/useAuthentication';
 import { 
   Star, 
@@ -922,6 +924,9 @@ export function FlashFusionLandingPage() {
           </div>
         </section>
 
+        {/* Persona Use Cases - Targeted Workflows */}
+        <PersonaUseCases />
+
         {/* Features Section */}
         <section id="features" className="py-32 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
@@ -986,6 +991,9 @@ export function FlashFusionLandingPage() {
             </div>
           </div>
         </section>
+
+        {/* Deployment Marquee */}
+        <DeploymentMarquee />
 
         {/* Pricing Section */}
         <section id="pricing" className="py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
