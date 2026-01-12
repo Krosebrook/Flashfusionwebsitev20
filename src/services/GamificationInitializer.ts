@@ -1,6 +1,9 @@
+import { projectId, publicAnonKey } from '../utils/supabase/info';
+
 /**
  * Gamification Initializer Service
  * Handles initialization and state management for the gamification system
+ * Now integrated with Supabase KV Store
  */
 
 export interface UserStats {
@@ -13,6 +16,8 @@ export interface UserStats {
   last_active: string;
 }
 
+const API_URL = `https://${projectId}.supabase.co/functions/v1/make-server-88829a40`;
+
 class GamificationService {
   private stats: UserStats | null = null;
   private initialized = false;
@@ -20,14 +25,41 @@ class GamificationService {
   async initialize(): Promise<void> {
     if (this.initialized) return;
 
-    // Simulate loading from local storage or API
-    const savedStats = localStorage.getItem('ff_gamification_stats');
-    if (savedStats) {
-      this.stats = JSON.parse(savedStats);
-    } else {
-      // Initialize with default stats for new user
+    // Get user ID from local storage or generate one
+    let userId = localStorage.getItem('ff_user_id');
+    if (!userId) {
+      userId = 'user_' + Date.now();
+      localStorage.setItem('ff_user_id', userId);
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/gamification/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${publicAnonKey}`
+        }
+      });
+      const data = await response.json();
+
+      if (data.success && data.stats) {
+        this.stats = data.stats;
+      } else {
+        // Initialize with default stats if no data on server
+        this.stats = {
+          user_id: userId,
+          level: 1,
+          current_xp: 0,
+          total_xp: 0,
+          next_level_xp: 100,
+          streak_days: 1,
+          last_active: new Date().toISOString()
+        };
+        await this.saveStats();
+      }
+    } catch (error) {
+      console.error('Failed to initialize gamification:', error);
+      // Fallback to minimal state if API fails
       this.stats = {
-        user_id: 'user_' + Date.now(),
+        user_id: userId,
         level: 1,
         current_xp: 0,
         total_xp: 0,
@@ -35,7 +67,6 @@ class GamificationService {
         streak_days: 1,
         last_active: new Date().toISOString()
       };
-      this.saveStats();
     }
     
     this.initialized = true;
@@ -61,15 +92,28 @@ class GamificationService {
       // Trigger level up event/toast here if needed
     }
 
-    this.saveStats();
+    await this.saveStats();
     return this.stats;
   }
 
-  private saveStats() {
+  private async saveStats() {
     if (this.stats) {
-      localStorage.setItem('ff_gamification_stats', JSON.stringify(this.stats));
+      try {
+        await fetch(`${API_URL}/gamification/${this.stats.user_id}`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${publicAnonKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(this.stats)
+        });
+      } catch (error) {
+        console.error('Failed to save gamification stats:', error);
+      }
     }
   }
 }
 
 export const GamificationInitializer = new GamificationService();
+export const awardXP = (amount: number, reason: string) => GamificationInitializer.awardXP(amount, reason);
+export const getCurrentStats = () => GamificationInitializer.getCurrentStats();

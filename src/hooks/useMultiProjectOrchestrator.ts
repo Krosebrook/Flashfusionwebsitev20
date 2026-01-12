@@ -67,9 +67,29 @@ export function useMultiProjectOrchestrator(currentProjectId: string, agents: Ag
   };
 
   const analyzeCrossProjectSynergies = async () => {
-    // In a real app, this would be an API call to an AI service
-    // For now, we simulate AI analysis locally or use sample data
-    setSynergies(SAMPLE_SYNERGIES);
+    try {
+      setIsOptimizing(true);
+      const response = await fetch(`${API_URL}/analyze-synergies`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${publicAnonKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ projects })
+      });
+      
+      const data = await response.json();
+      if (data.success && data.synergies) {
+        setSynergies(data.synergies);
+      } else {
+        setSynergies(SAMPLE_SYNERGIES);
+      }
+    } catch (error) {
+      console.error('Failed to analyze synergies:', error);
+      setSynergies(SAMPLE_SYNERGIES);
+    } finally {
+      setIsOptimizing(false);
+    }
   };
 
   const optimizeResourceAllocation = () => {
