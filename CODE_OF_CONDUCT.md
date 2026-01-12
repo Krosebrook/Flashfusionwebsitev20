@@ -60,7 +60,7 @@ representative at an online or offline event.
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
 reported to the community leaders responsible for enforcement at
-conduct@flashfusion.dev (or repository owner email).
+[repository owner's contact information - please update].
 
 All complaints will be reviewed and investigated promptly and fairly.
 
@@ -159,10 +159,8 @@ stronger communities.
 ## Reporting Issues
 
 If you experience or witness unacceptable behavior, or have any other concerns,
-please report it by contacting the project team at:
-
-- **Email**: conduct@flashfusion.dev (or repository owner email)
-- **GitHub**: Use the [reporting form](https://github.com/Krosebrook/Flashfusionwebsitev20/issues/new?template=code_of_conduct.md)
+please report it by contacting the project team via the repository's contact
+information (see repository owner's profile or organization settings).
 
 All reports will be handled with discretion and confidentiality.
 

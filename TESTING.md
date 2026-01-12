@@ -116,8 +116,8 @@ Test React components with user interactions.
 
 ```typescript
 // components/ui/Button.test.tsx
-import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { Button } from './Button';
 
 describe('Button', () => {

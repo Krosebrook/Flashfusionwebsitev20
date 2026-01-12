@@ -24,7 +24,8 @@ Thank you for your interest in contributing to FlashFusion! This document provid
 
 1. **Fork and clone the repository**
    ```bash
-   git clone https://github.com/Krosebrook/Flashfusionwebsitev20.git
+   # Replace YOUR_USERNAME with your GitHub username
+   git clone https://github.com/YOUR_USERNAME/Flashfusionwebsitev20.git
    cd Flashfusionwebsitev20
    ```
 

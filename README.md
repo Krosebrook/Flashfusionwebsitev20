@@ -48,7 +48,7 @@
 ### Prerequisites
 
 - **Node.js** 18+ ([Download](https://nodejs.org/))
-- **pnpm** package manager ([Install guide](https://pnpm.io/installation))
+- **npm** package manager (comes with Node.js)
 - **Git** ([Download](https://git-scm.com/))
 - **Supabase account** ([Sign up](https://supabase.com/))
 

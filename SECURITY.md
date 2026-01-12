@@ -20,8 +20,10 @@ The FlashFusion team takes security seriously. We appreciate your efforts to res
 
 Instead, please report security vulnerabilities by:
 
-1. **Email**: Send details to security@flashfusion.dev (or repository owner email)
+1. **Email**: Send details to the repository maintainers (see repository owner's contact info)
 2. **GitHub Security Advisories**: Use the [Security tab](https://github.com/Krosebrook/Flashfusionwebsitev20/security/advisories/new) to privately report vulnerabilities
+
+> **Note**: Update the email contact information to reflect your organization's security contact.
 
 ### What to Include in Your Report
 
