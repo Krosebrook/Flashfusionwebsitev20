@@ -595,20 +595,20 @@ ${generatedWorkflow.examples.join('\n\n')}
         </CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)}>
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-auto gap-1">
-              <TabsTrigger value="langchain" className="flex items-center gap-2 ff-nav-item">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="langchain" className="flex items-center gap-2">
                 <Brain className="w-4 h-4" />
                 LangChain
               </TabsTrigger>
-              <TabsTrigger value="graph" className="flex items-center gap-2 ff-nav-item">
+              <TabsTrigger value="graph" className="flex items-center gap-2">
                 <Network className="w-4 h-4" />
                 Graph
               </TabsTrigger>
-              <TabsTrigger value="forge" className="flex items-center gap-2 ff-nav-item">
+              <TabsTrigger value="forge" className="flex items-center gap-2">
                 <Settings className="w-4 h-4" />
                 Forge
               </TabsTrigger>
-              <TabsTrigger value="flow" className="flex items-center gap-2 ff-nav-item">
+              <TabsTrigger value="flow" className="flex items-center gap-2">
                 <GitBranch className="w-4 h-4" />
                 Flow
               </TabsTrigger>
@@ -652,9 +652,9 @@ ${generatedWorkflow.examples.join('\n\n')}
                     </div>
 
                     <div className="space-y-2">
-                      <Label id="langchain-model-label">AI Model</Label>
+                      <Label htmlFor="langchain-model">AI Model</Label>
                       <Select value={langchainModel} onValueChange={setLangchainModel}>
-                        <SelectTrigger className="bg-[var(--ff-surface)] border-[var(--border)] ff-focus-ring" aria-labelledby="langchain-model-label">
+                        <SelectTrigger className="bg-[var(--ff-surface)] border-[var(--border)]">
                           <SelectValue placeholder="Select model" />
                         </SelectTrigger>
                         <SelectContent>
@@ -687,7 +687,7 @@ ${generatedWorkflow.examples.join('\n\n')}
                   <CardContent className="space-y-4">
                     <div className="space-y-2">
                       <Label>Chain Types</Label>
-                      <div className="grid grid-cols-2 gap-2" role="group" aria-label="Select chain types">
+                      <div className="grid grid-cols-2 gap-2">
                         {['LLMChain', 'SequentialChain', 'RouterChain', 'TransformChain'].map((chain) => (
                           <Button
                             key={chain}
@@ -700,13 +700,11 @@ ${generatedWorkflow.examples.join('\n\n')}
                                   : [...prev, chain]
                               );
                             }}
-                            className={`
-                              ${langchainChains.includes(chain)
+                            className={
+                              langchainChains.includes(chain)
                                 ? 'bg-[var(--ff-primary)] text-white'
                                 : 'border-[var(--border)]'
-                              } ff-focus-ring
-                            `}
-                            aria-pressed={langchainChains.includes(chain)}
+                            }
                           >
                             {chain}
                           </Button>
@@ -716,14 +714,13 @@ ${generatedWorkflow.examples.join('\n\n')}
 
                     <div className="space-y-2">
                       <Label>Selected Chains</Label>
-                      <div className="flex flex-wrap gap-2" role="list" aria-label="Selected chains">
+                      <div className="flex flex-wrap gap-2">
                         {langchainChains.map((chain) => (
                           <Badge key={chain} className="bg-[var(--ff-primary)] text-white">
                             {chain}
                             <button
                               onClick={() => setLangchainChains(prev => prev.filter(c => c !== chain))}
-                              className="ml-1 hover:text-red-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-white/50"
-                              aria-label={`Remove ${chain}`}
+                              className="ml-1 hover:text-red-300"
                             >
                               ×
                             </button>

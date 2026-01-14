@@ -25,8 +25,7 @@ import {
   RefreshCw,
   FileCode,
   FolderTree,
-  Play,
-  FlaskConical
+  Play
 } from 'lucide-react';
 import { aiServiceManager } from '../../services/AIServiceManager';
 
@@ -276,134 +275,43 @@ Make sure all dependencies are compatible and up-to-date.`;
   };
 
   const generateCoreComponents = async (config: ProjectConfig): Promise<GeneratedFile[]> => {
-    const prompt = `Generate core components for a ${config.framework} application.
-    
-    App Description: ${config.description}
-    Framework: ${config.framework}
-    Styling: ${config.styling}
-    
-    Required Files:
-    1. src/App.tsx (or equivalent root component)
-    2. src/components/Layout.tsx (Main layout wrapper)
-    3. src/components/Header.tsx (Navigation header)
-    
-    Ensure components are functional and utilize the selected styling method.`;
+    // Simplified generation for now
+    return [
+      {
+        path: 'src/App.tsx',
+        content: `import React from 'react';
+import './App.css';
 
-    try {
-      const response = await aiServiceManager.generateCode(prompt, 'typescript', config.framework);
-      
-      return [
-        {
-          path: 'src/App.tsx',
-          content: extractFileContent(response.content, 'App.tsx'),
-          language: 'typescript',
-          size: 1024
-        },
-        {
-          path: 'src/components/Layout.tsx',
-          content: extractFileContent(response.content, 'Layout.tsx'),
-          language: 'typescript',
-          size: 850
-        },
-        {
-          path: 'src/components/Header.tsx',
-          content: extractFileContent(response.content, 'Header.tsx'),
-          language: 'typescript',
-          size: 640
-        }
-      ];
-    } catch (error) {
-      console.error('Error generating core components:', error);
-      return [];
-    }
+function App() {
+  return (
+    <div className="App">
+      <h1>${config.name}</h1>
+      <p>${config.description}</p>
+    </div>
+  );
+}
+
+export default App;`,
+        language: 'typescript',
+        size: 512
+      }
+    ];
   };
 
   const generateStyling = async (config: ProjectConfig): Promise<GeneratedFile[]> => {
-    const prompt = `Generate styling configuration for a ${config.framework} app using ${config.styling}.
-    
-    Files needed:
-    1. Global CSS or Theme configuration
-    2. Utility classes or theme variables
-    
-    Make it look modern and clean.`;
-
-    try {
-      const response = await aiServiceManager.generateCode(prompt, 'css', config.styling);
-      return [
-        {
-          path: config.styling === 'tailwind' ? 'src/index.css' : 'src/theme.ts',
-          content: response.content,
-          language: config.styling === 'tailwind' ? 'css' : 'typescript',
-          size: 512
-        }
-      ];
-    } catch (error) {
-      return [];
-    }
+    return [];
   };
 
   const generateDatabase = async (config: ProjectConfig): Promise<GeneratedFile[]> => {
-    const prompt = `Generate database schema for ${config.database} based on this app description: ${config.description}.
-    
-    Include tables/collections for Users and main app entities.`;
-
-    try {
-      const response = await aiServiceManager.generateCode(prompt, 'sql');
-      return [
-        {
-          path: config.database === 'prisma' ? 'prisma/schema.prisma' : 'db/schema.sql',
-          content: response.content,
-          language: 'sql',
-          size: 1024
-        }
-      ];
-    } catch (error) {
-      return [];
-    }
+    return [];
   };
 
   const generateAPIRoutes = async (config: ProjectConfig): Promise<GeneratedFile[]> => {
-    const prompt = `Generate backend API routes for a ${config.framework} application.
-    
-    Create endpoints for:
-    1. Health check
-    2. User data retrieval
-    
-    Use modern best practices.`;
-
-    try {
-      const response = await aiServiceManager.generateCode(prompt, 'typescript');
-      return [
-        {
-          path: 'src/api/routes.ts',
-          content: response.content,
-          language: 'typescript',
-          size: 1024
-        }
-      ];
-    } catch (error) {
-      return [];
-    }
+    return [];
   };
 
   const generateConfiguration = async (config: ProjectConfig): Promise<GeneratedFile[]> => {
-    const prompt = `Generate build configuration for ${config.framework}.
-    
-    File: vite.config.ts or next.config.js`;
-
-    try {
-      const response = await aiServiceManager.generateCode(prompt, 'typescript');
-      return [
-        {
-          path: config.framework === 'nextjs' ? 'next.config.js' : 'vite.config.ts',
-          content: response.content,
-          language: 'typescript',
-          size: 512
-        }
-      ];
-    } catch (error) {
-      return [];
-    }
+    return [];
   };
 
   // Helper functions to extract content from AI responses
@@ -452,17 +360,9 @@ Make sure all dependencies are compatible and up-to-date.`;
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center space-y-4 mb-8">
-          <div className="flex items-center justify-center gap-2">
-            <h1 className="text-3xl font-bold ff-text-gradient">
-              Full-Stack Application Builder
-            </h1>
-            {aiServiceManager.getDemoMode() && (
-              <Badge variant="outline" className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20 flex items-center gap-1">
-                <FlaskConical className="w-3 h-3" />
-                Demo Mode
-              </Badge>
-            )}
-          </div>
+          <h1 className="text-3xl font-bold ff-text-gradient">
+            Full-Stack Application Builder
+          </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Generate complete, production-ready applications with AI. From idea to deployment in minutes.
           </p>
@@ -471,7 +371,7 @@ Make sure all dependencies are compatible and up-to-date.`;
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Configuration Panel */}
           <div className="lg:col-span-1">
-            <Card className="ff-card-interactive lg:sticky lg:top-6">
+            <Card className="ff-card-interactive sticky top-6">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Settings className="w-5 h-5 text-primary" />
@@ -508,9 +408,9 @@ Make sure all dependencies are compatible and up-to-date.`;
 
                 {/* Framework Selection */}
                 <div>
-                  <Label id="framework-label">Frontend Framework</Label>
+                  <Label>Frontend Framework</Label>
                   <Select value={config.framework} onValueChange={(value) => setConfig(prev => ({ ...prev, framework: value }))}>
-                    <SelectTrigger className="ff-focus-ring" aria-labelledby="framework-label">
+                    <SelectTrigger className="ff-focus-ring">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -528,9 +428,9 @@ Make sure all dependencies are compatible and up-to-date.`;
 
                 {/* Styling */}
                 <div>
-                  <Label id="styling-label">Styling Solution</Label>
+                  <Label>Styling Solution</Label>
                   <Select value={config.styling} onValueChange={(value) => setConfig(prev => ({ ...prev, styling: value }))}>
-                    <SelectTrigger className="ff-focus-ring" aria-labelledby="styling-label">
+                    <SelectTrigger className="ff-focus-ring">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>

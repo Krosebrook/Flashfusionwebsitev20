@@ -42,8 +42,6 @@ import { WaitlistSystem } from '../waitlist/WaitlistSystem';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 import { PricingDropdownMenu } from '../pricing/PricingDropdownMenu';
 import { FAQDropdownSection } from '../faq/FAQDropdownSection';
-import { PersonaUseCases } from './PersonaUseCases';
-import { DeploymentMarquee } from './DeploymentMarquee';
 import type { AuthUser } from '../../hooks/useAuthentication';
 import { 
   Star, 
@@ -568,10 +566,24 @@ export function FlashFusionLandingPage() {
     setShowWorkflowDemo(false);
   };
 
-  // Handle Try Demo - open interactive workflow modal
+  // Handle Try Demo - navigate to demo mode
   const handleTryDemo = () => {
-    console.log('🎯 Landing: Opening interactive demo modal');
-    setShowWorkflowDemo(true);
+    try {
+      console.log('🎯 Landing: Navigating to demo mode...');
+      
+      // Navigate to demo mode without authentication
+      const currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.set('demo', 'true');
+      window.history.pushState({}, '', currentUrl.toString());
+      
+      // Trigger navigation change
+      NavigationEventManager.getInstance().triggerNavigationChange();
+      
+      console.log('✅ Landing: Demo mode activated');
+    } catch (error) {
+      console.error('❌ Landing: Failed to start demo:', error);
+      window.location.href = '?demo=true';
+    }
   };
 
   // If showing workflow demo, render it instead of landing page
@@ -910,9 +922,6 @@ export function FlashFusionLandingPage() {
           </div>
         </section>
 
-        {/* Persona Use Cases - Targeted Workflows */}
-        <PersonaUseCases />
-
         {/* Features Section */}
         <section id="features" className="py-32 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
@@ -977,9 +986,6 @@ export function FlashFusionLandingPage() {
             </div>
           </div>
         </section>
-
-        {/* Deployment Marquee */}
-        <DeploymentMarquee />
 
         {/* Pricing Section */}
         <section id="pricing" className="py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
