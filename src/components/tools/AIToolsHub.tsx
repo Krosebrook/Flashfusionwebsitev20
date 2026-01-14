@@ -3,7 +3,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Badge } from '../ui/badge';
 import { Input } from '../ui/input';
+import { Label } from '../ui/label';
 import { Button } from '../ui/button';
+import { Switch } from '../ui/switch';
 import { 
   Code, 
   Image, 
@@ -19,8 +21,10 @@ import {
   Users,
   Settings,
   Grid,
-  Loader2
+  Loader2,
+  FlaskConical
 } from 'lucide-react';
+import { aiServiceManager } from '../../services/AIServiceManager';
 
 // Lazy load components for better performance
 const FullStackBuilderTool = React.lazy(() => import('./FullStackBuilderTool'));
@@ -152,6 +156,13 @@ export function AIToolsHub() {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'popularity' | 'name' | 'category'>('popularity');
+  const [isDemoMode, setIsDemoMode] = useState(aiServiceManager.getDemoMode());
+
+  // Update demo mode when it changes
+  const toggleDemoMode = (enabled: boolean) => {
+    setIsDemoMode(enabled);
+    aiServiceManager.setDemoMode(enabled);
+  };
 
   // Filter and sort tools
   const filteredTools = TOOLS
@@ -186,25 +197,36 @@ export function AIToolsHub() {
     const ToolComponent = selectedToolData.component;
     return (
       <div className="space-y-4" style={{ fontFamily: 'var(--ff-font-secondary)' }}>
-        <div className="flex items-center gap-4">
-          <Button 
-            onClick={() => setSelectedTool(null)}
-            variant="outline" 
-            className="border-[var(--border)]"
-          >
-            ← Back to Tools
-          </Button>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button 
+              onClick={() => setSelectedTool(null)}
+              variant="outline" 
+              className="border-[var(--border)]"
+            >
+              ← Back to Tools
+            </Button>
+            <div className="flex items-center gap-2">
+              {selectedToolData.icon}
+              <h2 className="text-xl font-semibold text-[var(--ff-text-primary)]" style={{ fontFamily: 'var(--ff-font-primary)' }}>
+                {selectedToolData.name}
+              </h2>
+              {selectedToolData.new && (
+                <Badge className="bg-[var(--ff-primary)] text-white">New</Badge>
+              )}
+              {selectedToolData.featured && (
+                <Badge variant="outline" className="border-[var(--ff-accent)] text-[var(--ff-accent)]">Featured</Badge>
+              )}
+            </div>
+          </div>
+          
           <div className="flex items-center gap-2">
-            {selectedToolData.icon}
-            <h2 className="text-xl font-semibold text-[var(--ff-text-primary)]" style={{ fontFamily: 'var(--ff-font-primary)' }}>
-              {selectedToolData.name}
-            </h2>
-            {selectedToolData.new && (
-              <Badge className="bg-[var(--ff-primary)] text-white">New</Badge>
-            )}
-            {selectedToolData.featured && (
-              <Badge variant="outline" className="border-[var(--ff-accent)] text-[var(--ff-accent)]">Featured</Badge>
-            )}
+             {isDemoMode && (
+                <Badge variant="outline" className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20 flex items-center gap-1">
+                  <FlaskConical className="w-3 h-3" />
+                  Demo Mode Active
+                </Badge>
+             )}
           </div>
         </div>
         
@@ -220,6 +242,16 @@ export function AIToolsHub() {
       {/* Header */}
       <div className="text-center space-y-6">
         <div className="space-y-4">
+          <div className="flex justify-end mb-4">
+             <div className="flex items-center gap-2 bg-[var(--ff-surface)] border border-[var(--border)] px-4 py-2 rounded-full">
+                <Label htmlFor="demo-mode" className="text-sm font-medium cursor-pointer">Interactive Demo</Label>
+                <Switch 
+                  id="demo-mode" 
+                  checked={isDemoMode}
+                  onCheckedChange={toggleDemoMode}
+                />
+             </div>
+          </div>
           <h1 className="text-4xl font-bold text-[var(--ff-text-primary)]" style={{ fontFamily: 'var(--ff-font-primary)' }}>
             AI Tools Hub
           </h1>
@@ -232,38 +264,48 @@ export function AIToolsHub() {
         {/* Search and Filters */}
         <div className="max-w-2xl mx-auto space-y-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--ff-text-muted)] h-5 w-5" />
+            <Label htmlFor="tool-search" className="sr-only">Search tools</Label>
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--ff-text-muted)] h-5 w-5" aria-hidden="true" />
             <Input
+              id="tool-search"
               placeholder="Search tools by name, description, or tags..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-12 bg-[var(--input-background)] border-[var(--border)] text-[var(--ff-text-primary)]"
+              className="pl-10 h-12 bg-[var(--input-background)] border-[var(--border)] text-[var(--ff-text-primary)] ff-focus-ring"
             />
           </div>
           
           <div className="flex flex-wrap items-center justify-center gap-4">
-            <select
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-4 py-2 bg-[var(--input-background)] border-[var(--border)] rounded-md text-[var(--ff-text-primary)]"
-            >
-              <option value="all">All Categories</option>
-              {categories.map(category => (
-                <option value={category} key={category}>
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <Label htmlFor="category-filter" className="sr-only">Filter by category</Label>
+              <select
+                id="category-filter"
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                className="px-4 py-2 bg-[var(--input-background)] border-[var(--border)] rounded-md text-[var(--ff-text-primary)] ff-focus-ring h-10"
+              >
+                <option value="all">All Categories</option>
+                {categories.map(category => (
+                  <option value={category} key={category}>
+                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
             
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as 'popularity' | 'name' | 'category')}
-              className="px-4 py-2 bg-[var(--input-background)] border-[var(--border)] rounded-md text-[var(--ff-text-primary)]"
-            >
-              <option value="popularity">Sort by Popularity</option>
-              <option value="name">Sort by Name</option>
-              <option value="category">Sort by Category</option>
-            </select>
+            <div className="relative">
+              <Label htmlFor="sort-by" className="sr-only">Sort tools</Label>
+              <select
+                id="sort-by"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as 'popularity' | 'name' | 'category')}
+                className="px-4 py-2 bg-[var(--input-background)] border-[var(--border)] rounded-md text-[var(--ff-text-primary)] ff-focus-ring h-10"
+              >
+                <option value="popularity">Sort by Popularity</option>
+                <option value="name">Sort by Name</option>
+                <option value="category">Sort by Category</option>
+              </select>
+            </div>
             
             <Button variant="outline" size="sm" className="border-[var(--border)]">
               <Filter className="h-4 w-4 mr-2" />
@@ -281,7 +323,20 @@ export function AIToolsHub() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {TOOLS.filter(tool => tool.featured).map((tool) => (
-              <Card key={tool.id} className="bg-[var(--ff-surface)] border-[var(--border)] hover:shadow-lg transition-all duration-200 cursor-pointer group" onClick={() => handleToolSelect(tool.id)}>
+              <Card 
+                key={tool.id} 
+                className="bg-[var(--ff-surface)] border-[var(--border)] hover:shadow-lg transition-all duration-200 cursor-pointer group ff-focus-ring" 
+                onClick={() => handleToolSelect(tool.id)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleToolSelect(tool.id);
+                  }
+                }}
+                aria-label={`Select ${tool.name}`}
+              >
                 <CardContent className="p-6">
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
@@ -339,8 +394,17 @@ export function AIToolsHub() {
           {filteredTools.map((tool) => (
             <Card 
               key={tool.id} 
-              className="bg-[var(--ff-surface)] border-[var(--border)] hover:shadow-lg transition-all duration-200 cursor-pointer group"
+              className="bg-[var(--ff-surface)] border-[var(--border)] hover:shadow-lg transition-all duration-200 cursor-pointer group ff-focus-ring"
               onClick={() => handleToolSelect(tool.id)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleToolSelect(tool.id);
+                }
+              }}
+              aria-label={`Select ${tool.name}`}
             >
               <CardContent className="p-6">
                 <div className="space-y-4">

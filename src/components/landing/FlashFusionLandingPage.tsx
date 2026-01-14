@@ -568,24 +568,10 @@ export function FlashFusionLandingPage() {
     setShowWorkflowDemo(false);
   };
 
-  // Handle Try Demo - navigate to demo mode
+  // Handle Try Demo - open interactive workflow modal
   const handleTryDemo = () => {
-    try {
-      console.log('🎯 Landing: Navigating to demo mode...');
-      
-      // Navigate to demo mode without authentication
-      const currentUrl = new URL(window.location.href);
-      currentUrl.searchParams.set('demo', 'true');
-      window.history.pushState({}, '', currentUrl.toString());
-      
-      // Trigger navigation change
-      NavigationEventManager.getInstance().triggerNavigationChange();
-      
-      console.log('✅ Landing: Demo mode activated');
-    } catch (error) {
-      console.error('❌ Landing: Failed to start demo:', error);
-      window.location.href = '?demo=true';
-    }
+    console.log('🎯 Landing: Opening interactive demo modal');
+    setShowWorkflowDemo(true);
   };
 
   // If showing workflow demo, render it instead of landing page
