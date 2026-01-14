@@ -63,11 +63,9 @@ import {
   Activity,
   TrendingUp,
   Users,
-  Lock,
-  FlaskConical
+  Lock
 } from 'lucide-react';
 import { toast } from 'sonner@2.0.3';
-import { aiServiceManager } from '../../services/AIServiceManager';
 
 /**
  * Deployment Platform Configuration
@@ -414,10 +412,6 @@ export function OneClickDeployTool(): JSX.Element {
       return;
     }
 
-    if (aiServiceManager.getDemoMode()) {
-      toast.info('Running in Demo Mode: Deployment simulation started');
-    }
-
     setIsDeploying(true);
     
     const newDeployment: DeploymentStatus = {
@@ -566,12 +560,6 @@ export function OneClickDeployTool(): JSX.Element {
         </div>
         
         <div className="flex items-center gap-3">
-          {aiServiceManager.getDemoMode() && (
-             <Badge variant="outline" className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20 flex items-center gap-1">
-               <FlaskConical className="w-3 h-3" />
-               Demo Mode
-             </Badge>
-          )}
           <Badge variant="secondary" className="text-xs">
             {DEPLOYMENT_PLATFORMS.length} Platforms Available
           </Badge>
@@ -583,7 +571,7 @@ export function OneClickDeployTool(): JSX.Element {
 
       {/* Main Interface */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 h-auto gap-1">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="platforms" className="ff-nav-item">
             <Cloud className="h-4 w-4 mr-1" />
             Platforms
@@ -620,22 +608,12 @@ export function OneClickDeployTool(): JSX.Element {
                 {DEPLOYMENT_PLATFORMS.map((platform) => (
                   <Card
                     key={platform.id}
-                    className={`ff-card-interactive cursor-pointer transition-all duration-200 ff-focus-ring ${
+                    className={`ff-card-interactive cursor-pointer transition-all duration-200 ${
                       selectedPlatform === platform.id
                         ? 'ring-2 ring-[var(--ff-primary)] bg-gradient-to-br from-[var(--ff-primary)]/10 to-transparent'
                         : 'hover:shadow-lg hover:scale-105'
                     }`}
                     onClick={() => handlePlatformSelect(platform.id)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        handlePlatformSelect(platform.id);
-                      }
-                    }}
-                    aria-label={`Select deployment platform: ${platform.name}`}
-                    aria-selected={selectedPlatform === platform.id}
                   >
                     <CardContent className="p-4">
                       <div className="space-y-3">

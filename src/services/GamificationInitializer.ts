@@ -1,119 +1,149 @@
-import { projectId, publicAnonKey } from '../utils/supabase/info';
-
 /**
- * Gamification Initializer Service
- * Handles initialization and state management for the gamification system
- * Now integrated with Supabase KV Store
+ * Gamification System Initializer
+ * Ensures the gamification system works in both online and offline modes
  */
 
-export interface UserStats {
-  user_id: string;
-  level: number;
-  current_xp: number;
-  total_xp: number;
-  next_level_xp: number;
-  streak_days: number;
-  last_active: string;
-}
+import { GamificationService } from './GamificationService';
+import { toast } from 'sonner@2.0.3';
 
-const API_URL = `https://${projectId}.supabase.co/functions/v1/make-server-88829a40`;
+export class GamificationInitializer {
+  private static initialized = false;
 
-class GamificationService {
-  private stats: UserStats | null = null;
-  private initialized = false;
-
-  async initialize(): Promise<void> {
-    if (this.initialized) return;
-
-    // Get user ID from local storage or generate one
-    let userId = localStorage.getItem('ff_user_id');
-    if (!userId) {
-      userId = 'user_' + Date.now();
-      localStorage.setItem('ff_user_id', userId);
+  /**
+   * Initialize the gamification system
+   * This should be called once when the app starts
+   */
+  static async initialize(): Promise<void> {
+    if (this.initialized) {
+      return;
     }
 
     try {
-      const response = await fetch(`${API_URL}/gamification/${userId}`, {
-        headers: {
-          'Authorization': `Bearer ${publicAnonKey}`
+      // Get or create user ID
+      const userId = this.ensureUserId();
+      
+      // Initialize user stats (this will handle offline mode automatically)
+      const userStats = await GamificationService.getUserStats(userId);
+      
+      if (userStats) {
+        console.log('✅ Gamification system initialized successfully');
+        console.log(`📊 User Level: ${userStats.level}, XP: ${userStats.total_xp}`);
+        
+        // Award welcome bonus for new users
+        if (userStats.total_xp === 0 && userStats.level === 1) {
+          await GamificationService.addXP(
+            userId,
+            50,
+            'special',
+            'Welcome to FlashFusion!',
+            { first_time: true }
+          );
         }
-      });
-      const data = await response.json();
-
-      if (data.success && data.stats) {
-        this.stats = data.stats;
+        
+        // Record daily login
+        await GamificationService.recordDailyLogin(userId);
+        
       } else {
-        // Initialize with default stats if no data on server
-        this.stats = {
-          user_id: userId,
-          level: 1,
-          current_xp: 0,
-          total_xp: 0,
-          next_level_xp: 100,
-          streak_days: 1,
-          last_active: new Date().toISOString()
-        };
-        await this.saveStats();
+        console.warn('⚠️ Gamification system running in limited mode');
       }
+
     } catch (error) {
-      console.error('Failed to initialize gamification:', error);
-      // Fallback to minimal state if API fails
-      this.stats = {
-        user_id: userId,
-        level: 1,
-        current_xp: 0,
-        total_xp: 0,
-        next_level_xp: 100,
-        streak_days: 1,
-        last_active: new Date().toISOString()
-      };
+      console.error('❌ Failed to initialize gamification system:', error);
+      // Don't show error toast - system will work in offline mode
+    } finally {
+      this.initialized = true;
+    }
+  }
+
+  /**
+   * Ensure user has a persistent ID
+   */
+  private static ensureUserId(): string {
+    let userId = localStorage.getItem('ff_user_id');
+    
+    if (!userId) {
+      userId = `user_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
+      localStorage.setItem('ff_user_id', userId);
+      localStorage.setItem('user_id', userId); // Backwards compatibility
+      console.log('🆔 Created new user ID:', userId);
     }
     
-    this.initialized = true;
+    return userId;
   }
 
-  async getCurrentStats(): Promise<UserStats | null> {
-    if (!this.initialized) await this.initialize();
-    return this.stats;
-  }
-
-  async awardXP(amount: number, reason: string): Promise<UserStats> {
-    if (!this.initialized) await this.initialize();
-    if (!this.stats) throw new Error('Gamification not initialized');
-
-    this.stats.current_xp += amount;
-    this.stats.total_xp += amount;
-
-    // Check for level up
-    if (this.stats.current_xp >= this.stats.next_level_xp) {
-      this.stats.level += 1;
-      this.stats.current_xp -= this.stats.next_level_xp;
-      this.stats.next_level_xp = Math.floor(this.stats.next_level_xp * 1.5);
-      // Trigger level up event/toast here if needed
+  /**
+   * Test XP system with a sample award
+   */
+  static async testXPSystem(): Promise<boolean> {
+    try {
+      const userId = this.ensureUserId();
+      const result = await GamificationService.addXP(
+        userId,
+        10,
+        'tool_usage',
+        'System test',
+        { test: true }
+      );
+      
+      return result !== null;
+    } catch (error) {
+      console.error('XP system test failed:', error);
+      return false;
     }
-
-    await this.saveStats();
-    return this.stats;
   }
 
-  private async saveStats() {
-    if (this.stats) {
-      try {
-        await fetch(`${API_URL}/gamification/${this.stats.user_id}`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${publicAnonKey}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(this.stats)
-        });
-      } catch (error) {
-        console.error('Failed to save gamification stats:', error);
-      }
+  /**
+   * Award XP for common actions with error handling
+   */
+  static async awardXP(
+    points: number, 
+    action: string, 
+    source: 'tool_usage' | 'project_completion' | 'achievement' | 'daily_streak' | 'collaboration' | 'special' = 'tool_usage',
+    metadata: Record<string, any> = {}
+  ): Promise<boolean> {
+    try {
+      const userId = this.ensureUserId();
+      const result = await GamificationService.addXP(userId, points, source, action, metadata);
+      return result !== null;
+    } catch (error) {
+      console.error('Failed to award XP:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Get current user stats with error handling
+   */
+  static async getCurrentStats() {
+    try {
+      const userId = this.ensureUserId();
+      return await GamificationService.getUserStats(userId);
+    } catch (error) {
+      console.error('Failed to get user stats:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Check if the system is running in offline mode
+   */
+  static isOfflineMode(): boolean {
+    try {
+      const testKey = 'ff_offline_test';
+      localStorage.setItem(testKey, 'test');
+      localStorage.removeItem(testKey);
+      return false; // LocalStorage is available
+    } catch (error) {
+      return true; // LocalStorage not available, fully offline
     }
   }
 }
 
-export const GamificationInitializer = new GamificationService();
-export const awardXP = (amount: number, reason: string) => GamificationInitializer.awardXP(amount, reason);
+// Export convenience functions
+export const initializeGamification = () => GamificationInitializer.initialize();
+export const awardXP = (points: number, action: string, source?: any, metadata?: any) => 
+  GamificationInitializer.awardXP(points, action, source, metadata);
 export const getCurrentStats = () => GamificationInitializer.getCurrentStats();
+export const testXPSystem = () => GamificationInitializer.testXPSystem();
+
+export default GamificationInitializer;
