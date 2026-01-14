@@ -28,7 +28,8 @@ import {
   CheckCircle,
   AlertCircle,
   Clock,
-  Zap
+  Zap,
+  FlaskConical
 } from 'lucide-react';
 import { aiServiceManager } from '../../services/AIServiceManager';
 
@@ -381,9 +382,17 @@ Create engaging, platform-optimized content that resonates with the target audie
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center space-y-4 mb-8">
-          <h1 className="text-3xl font-bold ff-text-gradient">
-            AI Content Generator
-          </h1>
+          <div className="flex items-center justify-center gap-2">
+            <h1 className="text-3xl font-bold ff-text-gradient">
+              AI Content Generator
+            </h1>
+            {aiServiceManager.getDemoMode() && (
+              <Badge variant="outline" className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20 flex items-center gap-1">
+                <FlaskConical className="w-3 h-3" />
+                Demo Mode
+              </Badge>
+            )}
+          </div>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Create engaging, platform-optimized content with AI. From social posts to long-form articles.
           </p>
@@ -392,7 +401,7 @@ Create engaging, platform-optimized content that resonates with the target audie
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Configuration Panel */}
           <div className="lg:col-span-1">
-            <Card className="ff-card-interactive sticky top-6">
+            <Card className="ff-card-interactive lg:sticky lg:top-6">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <PenTool className="w-5 h-5 text-primary" />
@@ -416,9 +425,9 @@ Create engaging, platform-optimized content that resonates with the target audie
 
                 {/* Content Type */}
                 <div>
-                  <Label>Content Type</Label>
+                  <Label id="content-type-label">Content Type</Label>
                   <Select value={config.contentType} onValueChange={(value) => setConfig(prev => ({ ...prev, contentType: value }))}>
-                    <SelectTrigger className="ff-focus-ring">
+                    <SelectTrigger className="ff-focus-ring" aria-labelledby="content-type-label">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -463,9 +472,9 @@ Create engaging, platform-optimized content that resonates with the target audie
 
                 {/* Tone */}
                 <div>
-                  <Label>Tone & Style</Label>
+                  <Label id="tone-label">Tone & Style</Label>
                   <Select value={config.tone} onValueChange={(value) => setConfig(prev => ({ ...prev, tone: value }))}>
-                    <SelectTrigger className="ff-focus-ring">
+                    <SelectTrigger className="ff-focus-ring" aria-labelledby="tone-label">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -483,9 +492,9 @@ Create engaging, platform-optimized content that resonates with the target audie
 
                 {/* Audience */}
                 <div>
-                  <Label>Target Audience</Label>
+                  <Label id="audience-label">Target Audience</Label>
                   <Select value={config.audience} onValueChange={(value) => setConfig(prev => ({ ...prev, audience: value }))}>
-                    <SelectTrigger className="ff-focus-ring">
+                    <SelectTrigger className="ff-focus-ring" aria-labelledby="audience-label">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -503,29 +512,40 @@ Create engaging, platform-optimized content that resonates with the target audie
 
                 {/* Keywords */}
                 <div>
-                  <Label>Target Keywords</Label>
+                  <Label htmlFor="keyword-input">Target Keywords</Label>
                   <div className="space-y-2">
                     <div className="flex gap-2">
                       <Input
+                        id="keyword-input"
                         value={keywordInput}
                         onChange={(e) => setKeywordInput(e.target.value)}
                         placeholder="Add keyword"
                         className="ff-focus-ring"
                         onKeyDown={(e) => e.key === 'Enter' && addKeyword()}
+                        aria-label="Add a new keyword"
                       />
-                      <Button onClick={addKeyword} size="sm" variant="outline">
+                      <Button onClick={addKeyword} size="sm" variant="outline" aria-label="Add keyword to list">
                         Add
                       </Button>
                     </div>
                     
                     {config.keywords.length > 0 && (
-                      <div className="flex flex-wrap gap-1">
+                      <div className="flex flex-wrap gap-1" role="list" aria-label="Selected keywords">
                         {config.keywords.map((keyword, index) => (
                           <Badge
                             key={index}
                             variant="secondary"
-                            className="cursor-pointer"
+                            className="cursor-pointer hover:bg-destructive/10 hover:text-destructive transition-colors"
                             onClick={() => removeKeyword(keyword)}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                removeKeyword(keyword);
+                              }
+                            }}
+                            aria-label={`Remove keyword ${keyword}`}
                           >
                             {keyword} ×
                           </Badge>
@@ -572,9 +592,9 @@ Create engaging, platform-optimized content that resonates with the target audie
 
                 {/* Language */}
                 <div>
-                  <Label>Language</Label>
+                  <Label id="language-label">Language</Label>
                   <Select value={config.targetLanguage} onValueChange={(value) => setConfig(prev => ({ ...prev, targetLanguage: value }))}>
-                    <SelectTrigger className="ff-focus-ring">
+                    <SelectTrigger className="ff-focus-ring" aria-labelledby="language-label">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -656,8 +676,18 @@ Create engaging, platform-optimized content that resonates with the target audie
                               selectedContent?.id === content.id 
                                 ? 'ring-2 ring-primary bg-primary/5' 
                                 : 'hover:border-primary/40'
-                            }`}
+                            } ff-focus-ring`}
                             onClick={() => setSelectedContent(content)}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                setSelectedContent(content);
+                              }
+                            }}
+                            aria-label={`Select generated content for ${platform?.label}`}
+                            aria-selected={selectedContent?.id === content.id}
                           >
                             <CardContent className="p-4">
                               <div className="flex items-center justify-between mb-3">
