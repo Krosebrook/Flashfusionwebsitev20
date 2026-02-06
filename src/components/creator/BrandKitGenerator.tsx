@@ -208,11 +208,113 @@ export function BrandKitGenerator() {
 
   const downloadBrandKit = () => {
     // Simulate download
-    console.log('Downloading brand kit...');
+    if (!generatedBrandKit) return;
+    
+    // Create download content
+    const brandKitContent = {
+      brandName: generatedBrandKit.name,
+      industry: generatedBrandKit.industry,
+      description: generatedBrandKit.description,
+      colors: generatedBrandKit.colors,
+      fonts: generatedBrandKit.fonts,
+      tone: generatedBrandKit.tone,
+      generatedAt: new Date().toISOString()
+    };
+    
+    // Convert to JSON and download
+    const dataStr = JSON.stringify(brandKitContent, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${generatedBrandKit.name.toLowerCase().replace(/\s+/g, '-')}-brand-kit.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    // Also simulate downloading color palette as CSS
+    const cssContent = `/* ${generatedBrandKit.name} Brand Colors */\n:root {\n  --brand-primary: ${generatedBrandKit.colors.primary};\n  --brand-secondary: ${generatedBrandKit.colors.secondary};\n  --brand-accent: ${generatedBrandKit.colors.accent};\n  --brand-background: ${generatedBrandKit.colors.background};\n  --brand-text: ${generatedBrandKit.colors.text};\n}\n`;
+    
+    const cssBlob = new Blob([cssContent], { type: 'text/css' });
+    const cssUrl = URL.createObjectURL(cssBlob);
+    const cssLink = document.createElement('a');
+    cssLink.href = cssUrl;
+    cssLink.download = `${generatedBrandKit.name.toLowerCase().replace(/\s+/g, '-')}-colors.css`;
+    document.body.appendChild(cssLink);
+    cssLink.click();
+    document.body.removeChild(cssLink);
+    URL.revokeObjectURL(cssUrl);
+    
+    console.log('Brand kit downloaded successfully!');
   };
 
   const copyColor = (color: string) => {
     navigator.clipboard.writeText(color);
+    // You could add a toast notification here
+    console.log(`Color ${color} copied to clipboard`);
+  };
+  
+  const shareBrandKit = () => {
+    if (!generatedBrandKit) return;
+    
+    // Create shareable text
+    const shareText = `Check out my ${generatedBrandKit.name} Brand Kit created with FlashFusion AI!\n\nIndustry: ${generatedBrandKit.industry}\n${generatedBrandKit.description}`;
+    
+    // Try to use native share API if available
+    if (navigator.share) {
+      navigator.share({
+        title: `${generatedBrandKit.name} Brand Kit`,
+        text: shareText,
+        url: window.location.href
+      }).then(() => {
+        console.log('Brand kit shared successfully');
+      }).catch((error) => {
+        console.log('Error sharing:', error);
+        // Fallback to clipboard
+        navigator.clipboard.writeText(shareText);
+      });
+    } else {
+      // Fallback to clipboard
+      navigator.clipboard.writeText(shareText);
+      console.log('Share link copied to clipboard');
+    }
+  };
+  
+  const refineWithAI = async () => {
+    if (!generatedBrandKit) return;
+    
+    console.log('Refining brand kit with AI...');
+    setIsGenerating(true);
+    
+    // Simulate AI refinement
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Generate slightly different variations
+    const refinedColors = {
+      primary: adjustColor(generatedBrandKit.colors.primary),
+      secondary: adjustColor(generatedBrandKit.colors.secondary),
+      accent: adjustColor(generatedBrandKit.colors.accent),
+      background: generatedBrandKit.colors.background,
+      text: generatedBrandKit.colors.text
+    };
+    
+    setGeneratedBrandKit({
+      ...generatedBrandKit,
+      colors: refinedColors
+    });
+    
+    setIsGenerating(false);
+    console.log('Brand kit refined successfully!');
+  };
+  
+  const adjustColor = (color: string): string => {
+    // Simple color adjustment for demo purposes
+    const hex = color.replace('#', '');
+    const rgb = parseInt(hex, 16);
+    const adjustment = Math.floor(Math.random() * 40) - 20;
+    const newRgb = Math.max(0, Math.min(0xFFFFFF, rgb + (adjustment * 0x010101)));
+    return '#' + newRgb.toString(16).padStart(6, '0');
   };
 
   return (
@@ -412,7 +514,7 @@ export function BrandKitGenerator() {
               {/* Brand Overview */}
               <Card>
                 <CardHeader>
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between space-y-4 md:space-y-0">
                     <div>
                       <CardTitle className="flex items-center space-x-2">
                         <Crown className="w-5 h-5 text-primary" />
@@ -420,10 +522,20 @@ export function BrandKitGenerator() {
                       </CardTitle>
                       <CardDescription>{generatedBrandKit.description}</CardDescription>
                     </div>
-                    <Button onClick={downloadBrandKit} className="ff-btn-primary">
-                      <Download className="w-4 h-4 mr-2" />
-                      Download Kit
-                    </Button>
+                    <div className="flex flex-wrap gap-2">
+                      <Button onClick={downloadBrandKit} className="ff-btn-primary">
+                        <Download className="w-4 h-4 mr-2" />
+                        Download All Files
+                      </Button>
+                      <Button onClick={shareBrandKit} variant="outline" className="ff-btn-outline">
+                        <Share2 className="w-4 h-4 mr-2" />
+                        Share Creation
+                      </Button>
+                      <Button onClick={refineWithAI} variant="secondary" className="ff-btn-secondary">
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        Refine with AI
+                      </Button>
+                    </div>
                   </div>
                 </CardHeader>
               </Card>
