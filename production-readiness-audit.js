@@ -76,12 +76,15 @@ function readFile(filePath) {
 function findFiles(pattern, directory = '.') {
   try {
     // Use git ls-files to only search tracked files, excluding node_modules, dist, etc.
-    // Pattern is used with grep, so no shell escaping needed
+    // Pattern needs shell escaping but we pass it as a single argument
     const result = execSync(
-      `git ls-files ${directory} | grep -E ${escapeShellArg(pattern)} 2>/dev/null | head -100`,
+      `git ls-files ${directory}`,
       { cwd: config.repoPath, encoding: 'utf8' }
     );
-    return result.trim().split('\n').filter(f => f);
+    const files = result.trim().split('\n').filter(f => f);
+    // Filter files using JavaScript regex instead of grep for better control
+    const regex = new RegExp(pattern);
+    return files.filter(f => regex.test(f)).slice(0, 100);
   } catch {
     return [];
   }
@@ -89,11 +92,10 @@ function findFiles(pattern, directory = '.') {
 
 function searchInFiles(pattern, filePattern = '*') {
   try {
-    // Use git grep to only search tracked files, with extended regex support
-    // Git grep handles patterns natively, only escape the file pattern for shell
-    const escapedFilePattern = escapeShellArg(filePattern);
+    // Use git grep with extended regex support
+    // Pass pattern and filePattern as separate arguments to avoid shell interpretation issues
     const result = execSync(
-      `git grep -E ${escapeShellArg(pattern)} -- ${escapedFilePattern} 2>/dev/null | head -50`,
+      `git grep -E '${pattern.replace(/'/g, "'\\''")}' -- '${filePattern.replace(/'/g, "'\\''")}' 2>/dev/null | head -50`,
       { cwd: config.repoPath, encoding: 'utf8' }
     );
     return result.trim().split('\n').filter(line => line);

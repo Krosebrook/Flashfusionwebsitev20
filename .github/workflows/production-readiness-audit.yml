@@ -105,8 +105,8 @@ jobs:
         id: check_blockers
         run: |
           # Count critical blockers - only parse the CRITICAL BLOCKERS section
-          # Stop at PUBLIC LAUNCH BLOCKERS or end of section marker
-          CRITICAL_COUNT=$(awk '/CRITICAL BLOCKERS \(Must fix/{flag=1;next}/^(PUBLIC LAUNCH BLOCKERS|={80}|SECTION)/{flag=0}flag' audit-report.txt | grep "^  [0-9]" | wc -l || echo "0")
+          # Stop at PUBLIC LAUNCH BLOCKERS, section separator, or SECTION keyword
+          CRITICAL_COUNT=$(awk '/CRITICAL BLOCKERS \(Must fix/{flag=1;next}/^PUBLIC LAUNCH BLOCKERS/{flag=0}/^=+$/{flag=0}/^SECTION/{flag=0}flag' audit-report.txt | grep "^  [0-9]" | wc -l || echo "0")
           echo "critical_count=${CRITICAL_COUNT}" >> $GITHUB_OUTPUT
           
           if [ "$CRITICAL_COUNT" -gt 0 ]; then
