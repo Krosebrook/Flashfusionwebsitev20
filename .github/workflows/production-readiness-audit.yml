@@ -1,0 +1,217 @@
+name: Production Readiness Audit
+
+on:
+  # Run on pull requests to main/production branches
+  pull_request:
+    branches: 
+      - main
+      - production
+      - master
+  
+  # Run on push to main/production branches
+  push:
+    branches:
+      - main
+      - production
+      - master
+  
+  # Run weekly on Sunday at midnight UTC
+  schedule:
+    - cron: '0 0 * * 0'
+  
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      deployment_url:
+        description: 'Deployment URL for runtime checks (optional)'
+        required: false
+        type: string
+      intended_audience:
+        description: 'Intended audience'
+        required: false
+        type: choice
+        options:
+          - Unknown
+          - Employee
+          - Public
+          - Both
+        default: 'Unknown'
+
+jobs:
+  audit:
+    name: Production Readiness Audit
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      pull-requests: write  # For commenting on PRs
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for git checks
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies (if needed for audit)
+        run: |
+          if [ -f package.json ]; then
+            npm ci --production || npm install --production || echo "No package.json or install not needed"
+          fi
+        continue-on-error: true
+      
+      - name: Run Production Readiness Audit
+        id: audit
+        env:
+          # Set deployment URL from secrets or manual input
+          DEPLOYMENT_URL: ${{ secrets.PRODUCTION_URL || github.event.inputs.deployment_url || '' }}
+          INTENDED_AUDIENCE: ${{ github.event.inputs.intended_audience || 'Unknown' }}
+          # Configure based on your application
+          HANDLES_PII: ${{ secrets.HANDLES_PII || 'false' }}
+          HANDLES_PAYMENTS: ${{ secrets.HANDLES_PAYMENTS || 'false' }}
+          HANDLES_SECRETS: ${{ secrets.HANDLES_SECRETS || 'true' }}
+        run: |
+          echo "Running production readiness audit..."
+          node production-readiness-audit.js > audit-report.txt 2>&1
+          AUDIT_EXIT_CODE=$?
+          
+          if [ ! -s audit-report.txt ]; then
+            echo "Audit report was not generated or is empty."
+            exit 1
+          fi
+          
+          if [ "$AUDIT_EXIT_CODE" -ne 0 ]; then
+            echo "Production readiness audit script failed with exit code ${AUDIT_EXIT_CODE}."
+            exit "$AUDIT_EXIT_CODE"
+          fi
+          
+          # Display report
+          cat audit-report.txt
+          
+          # Extract key metrics for summary
+          echo "## Audit Summary" > audit-summary.md
+          echo "" >> audit-summary.md
+          grep "Total Score:" audit-report.txt | head -1 >> audit-summary.md || echo "Score: Not available" >> audit-summary.md
+          grep "Readiness Level:" audit-report.txt | head -1 >> audit-summary.md || echo "Level: Unknown" >> audit-summary.md
+          echo "" >> audit-summary.md
+          echo "See full report in artifacts." >> audit-summary.md
+      
+      - name: Check for Critical Blockers
+        id: check_blockers
+        run: |
+          # Count critical blockers - only parse the CRITICAL BLOCKERS section
+          # Stop at PUBLIC LAUNCH BLOCKERS, section separator, or SECTION keyword
+          CRITICAL_COUNT=$(awk '/CRITICAL BLOCKERS.*Must fix/{flag=1;next}/^PUBLIC LAUNCH BLOCKERS/{flag=0}/^=+$/{flag=0}/^SECTION/{flag=0}flag' audit-report.txt | grep "^  [0-9]" | wc -l || echo "0")
+          echo "critical_count=${CRITICAL_COUNT}" >> $GITHUB_OUTPUT
+          
+          if [ "$CRITICAL_COUNT" -gt 0 ]; then
+            echo "⚠️ Found ${CRITICAL_COUNT} critical blocker(s)"
+            echo "has_blockers=true" >> $GITHUB_OUTPUT
+          else
+            echo "✅ No critical blockers found"
+            echo "has_blockers=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Extract Score
+        id: extract_score
+        run: |
+          # Extract numeric score
+          SCORE=$(grep "Total Score:" audit-report.txt | grep -oP '\d+\.\d+(?=/\d+)' | head -1 || echo "0")
+          echo "score=${SCORE}" >> $GITHUB_OUTPUT
+          echo "Extracted score: ${SCORE}"
+      
+      - name: Upload Audit Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: production-readiness-audit-report
+          path: |
+            audit-report.txt
+            audit-summary.md
+          retention-days: 90
+      
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('audit-summary.md', 'utf8');
+            const score = '${{ steps.extract_score.outputs.score }}';
+            const hasBlockers = '${{ steps.check_blockers.outputs.has_blockers }}' === 'true';
+            const criticalCount = '${{ steps.check_blockers.outputs.critical_count }}';
+            
+            let emoji = '✅';
+            let status = 'PASSED';
+            if (hasBlockers) {
+              emoji = '🚫';
+              status = 'CRITICAL BLOCKERS FOUND';
+            } else if (parseFloat(score) < 36) {
+              emoji = '⚠️';
+              status = 'NEEDS IMPROVEMENT';
+            }
+            
+            const comment = `## ${emoji} Production Readiness Audit - ${status}
+            
+            **Score:** ${score}/50
+            **Critical Blockers:** ${criticalCount}
+            
+            ${summary}
+            
+            <details>
+            <summary>View Key Findings</summary>
+            
+            Download the full audit report from the workflow artifacts for detailed findings.
+            
+            ### Quick Actions:
+            - Review critical blockers in the full report
+            - Address security and reliability issues
+            - Run audit locally: \`node production-readiness-audit.js\`
+            
+            </details>
+            
+            ---
+            *Automated audit by Production Readiness Audit Tool*
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+      
+      - name: Set Status Check
+        if: always()
+        run: |
+          SCORE=${{ steps.extract_score.outputs.score }}
+          HAS_BLOCKERS=${{ steps.check_blockers.outputs.has_blockers }}
+          
+          # Fail the check if there are critical blockers
+          if [ "$HAS_BLOCKERS" = "true" ]; then
+            echo "::error::Critical blockers found in production readiness audit"
+            exit 1
+          fi
+          
+          # Warn if score is below employee pilot threshold (36)
+          # Use awk for numeric comparison (bc may not be available)
+          if [ $(echo "$SCORE 36" | awk '{print ($1 < $2)}') -eq 1 ]; then
+            echo "::warning::Production readiness score is below employee pilot threshold (${SCORE}/50)"
+          fi
+          
+          echo "✅ Audit completed successfully"
+      
+      - name: Generate Job Summary
+        if: always()
+        run: |
+          cat audit-summary.md >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Critical Blockers" >> $GITHUB_STEP_SUMMARY
+          grep -A 50 "CRITICAL BLOCKERS" audit-report.txt | grep "^  [0-9]" | head -10 >> $GITHUB_STEP_SUMMARY || echo "None found ✅" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📥 Download full report from workflow artifacts" >> $GITHUB_STEP_SUMMARY
