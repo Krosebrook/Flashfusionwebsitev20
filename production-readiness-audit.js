@@ -568,8 +568,7 @@ function auditSecurity() {
   // Check for dependency scanning
   const securityChecks = [
     fileExists('package-lock.json') || fileExists('yarn.lock') || fileExists('pnpm-lock.yaml'),
-    searchInFiles('audit|snyk|dependabot', '.github/**/*.yml').length > 0 || 
-    searchInFiles('audit|snyk|dependabot', '.github/**/*.yaml').length > 0
+    searchInFiles('audit|snyk|dependabot', '.github/**/*.{yml,yaml}').length > 0
   ];
   
   if (securityChecks[1]) {
