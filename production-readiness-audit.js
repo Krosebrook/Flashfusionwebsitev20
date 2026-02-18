@@ -24,6 +24,15 @@ const config = {
   handlesSecrets: process.env.HANDLES_SECRETS === 'true'
 };
 
+// Readiness score thresholds
+const READINESS_THRESHOLDS = {
+  PRODUCTION_READY: 51,
+  PUBLIC_BETA_READY: 43,
+  EMPLOYEE_PILOT_READY: 36,
+  DEV_PREVIEW: 26,
+  PROTOTYPE: 0
+};
+
 // Scoring results
 const scores = {
   identityAccess: { score: 0, max: 5, findings: [] },
@@ -43,6 +52,11 @@ const publicLaunchBlockers = [];
 const improvements = [];
 
 // Utility functions
+function escapeShellArg(arg) {
+  // Escape shell argument to prevent command injection
+  return "'" + arg.replace(/'/g, "'\\''") + "'";
+}
+
 function fileExists(filePath) {
   try {
     return fs.existsSync(path.join(config.repoPath, filePath));
@@ -61,8 +75,9 @@ function readFile(filePath) {
 
 function findFiles(pattern, directory = '.') {
   try {
+    const escapedPattern = escapeShellArg(pattern);
     const result = execSync(
-      `find ${directory} -type f -name '${pattern}' 2>/dev/null | head -100`,
+      `find ${directory} -type f -name ${escapedPattern} 2>/dev/null | head -100`,
       { cwd: config.repoPath, encoding: 'utf8' }
     );
     return result.trim().split('\n').filter(f => f);
@@ -73,8 +88,10 @@ function findFiles(pattern, directory = '.') {
 
 function searchInFiles(pattern, filePattern = '*') {
   try {
+    const escapedPattern = escapeShellArg(pattern);
+    const escapedFilePattern = escapeShellArg(filePattern);
     const result = execSync(
-      `grep -r '${pattern}' --include='${filePattern}' . 2>/dev/null | head -50`,
+      `grep -r ${escapedPattern} --include=${escapedFilePattern} . 2>/dev/null | head -50`,
       { cwd: config.repoPath, encoding: 'utf8' }
     );
     return result.trim().split('\n').filter(line => line);
@@ -88,8 +105,9 @@ function checkGitSecrets() {
     // Check for potential secrets in git log
     const patterns = ['password', 'secret', 'api_key', 'private_key'];
     for (const pattern of patterns) {
+      const escapedPattern = escapeShellArg(pattern);
       const result = execSync(
-        `git log --all --oneline -S '${pattern}' 2>/dev/null | head -5`,
+        `git log --all --oneline -S ${escapedPattern} 2>/dev/null | head -5`,
         { cwd: config.repoPath, encoding: 'utf8' }
       );
       if (result.trim().length > 0) {
@@ -145,11 +163,13 @@ function auditIdentityAccess() {
     publicLaunchBlockers.push('Missing role-based access control');
   }
   
-  // Check for hardcoded credentials
+  // Check for hardcoded credentials - look for actual assignments with values
   const credentialPatterns = [
-    ...searchInFiles('password.*=', '*.ts*'),
-    ...searchInFiles('api_key.*=', '*.ts*'),
-    ...searchInFiles('secret.*=', '*.ts*')
+    ...searchInFiles('password\\s*=\\s*["\']', '*.ts*'),
+    ...searchInFiles('api_key\\s*=\\s*["\']', '*.ts*'),
+    ...searchInFiles('secret\\s*=\\s*["\']', '*.ts*'),
+    ...searchInFiles('API_KEY\\s*=\\s*["\']', '*.ts*'),
+    ...searchInFiles('SECRET\\s*=\\s*["\']', '*.ts*')
   ];
   
   if (credentialPatterns.length > 0) {
@@ -742,13 +762,32 @@ async function performRuntimeChecks() {
   const findings = [];
   
   try {
+    // Validate and escape deployment URL
+    if (!config.deploymentUrl || typeof config.deploymentUrl !== 'string') {
+      return {
+        status: 'SKIPPED',
+        findings: ['No deployment URL provided - runtime checks skipped']
+      };
+    }
+    
+    // Basic URL validation
+    try {
+      new URL(config.deploymentUrl);
+    } catch {
+      return {
+        status: 'FAILED',
+        findings: ['Invalid deployment URL provided']
+      };
+    }
+    
+    const findings = [];
+    const escapedUrl = escapeShellArg(config.deploymentUrl);
+    
     // Use curl since fetch might not be available
-    const startTime = Date.now();
     const result = execSync(
-      `curl -s -o /dev/null -w "%{http_code}|%{time_total}" -L -m 10 "${config.deploymentUrl}"`,
+      `curl -s -o /dev/null -w "%{http_code}|%{time_total}" -L -m 10 ${escapedUrl}`,
       { encoding: 'utf8' }
     );
-    const endTime = Date.now();
     
     const [statusCode, curlTime] = result.trim().split('|');
     const responseTime = Math.round(parseFloat(curlTime) * 1000);
@@ -778,7 +817,7 @@ async function performRuntimeChecks() {
     
     // Check headers
     const headers = execSync(
-      `curl -s -I -L -m 10 "${config.deploymentUrl}"`,
+      `curl -s -I -L -m 10 ${escapedUrl}`,
       { encoding: 'utf8' }
     );
     
@@ -817,10 +856,10 @@ async function performRuntimeChecks() {
 
 // Calculate readiness level
 function calculateReadinessLevel(totalScore) {
-  if (totalScore >= 51) return 'Production Ready';
-  if (totalScore >= 43) return 'Public Beta Ready';
-  if (totalScore >= 36) return 'Employee Pilot Ready (with conditions)';
-  if (totalScore >= 26) return 'Dev Preview';
+  if (totalScore >= READINESS_THRESHOLDS.PRODUCTION_READY) return 'Production Ready';
+  if (totalScore >= READINESS_THRESHOLDS.PUBLIC_BETA_READY) return 'Public Beta Ready';
+  if (totalScore >= READINESS_THRESHOLDS.EMPLOYEE_PILOT_READY) return 'Employee Pilot Ready (with conditions)';
+  if (totalScore >= READINESS_THRESHOLDS.DEV_PREVIEW) return 'Dev Preview';
   return 'Prototype';
 }
 

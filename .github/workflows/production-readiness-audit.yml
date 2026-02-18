@@ -187,7 +187,8 @@ jobs:
           fi
           
           # Warn if score is below employee pilot threshold (36)
-          if (( $(echo "$SCORE < 36" | bc -l) )); then
+          # Use awk for numeric comparison (bc may not be available)
+          if [ $(echo "$SCORE 36" | awk '{print ($1 < $2)}') -eq 1 ]; then
             echo "::warning::Production readiness score is below employee pilot threshold (${SCORE}/50)"
           fi
           
