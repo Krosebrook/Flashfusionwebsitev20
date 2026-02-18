@@ -5,8 +5,8 @@
 The Production Readiness Audit Tool is a comprehensive auditing framework designed to evaluate software readiness across multiple deployment stages:
 
 1. **Employee/Internal Use** (Score 36-42)
-2. **Public Beta** (Score 43-50)
-3. **Production-Grade Launch** (Score 51+)
+2. **Public Beta** (Score 43-47)
+3. **Production-Grade Launch** (Score 48-50)
 
 This tool provides strict, evidence-based scoring across 10 critical categories, ensuring your software meets production standards before going live.
 
@@ -263,12 +263,12 @@ node production-readiness-audit.js > audit-report-$(date +%Y%m%d).txt
 **Safe for:** Internal users with monitoring  
 **Action:** Fix critical blockers, add production safeguards
 
-### 43-50 Points: Public Beta Ready
+### 43-47 Points: Public Beta Ready
 **Status:** Ready for limited public release  
 **Safe for:** Beta testers with close monitoring  
 **Action:** Complete remaining production hardening
 
-### 51+ Points: Production Ready
+### 48-50 Points: Production Ready
 **Status:** Production-grade system  
 **Safe for:** General availability  
 **Action:** Maintain and continuously improve
@@ -446,7 +446,7 @@ Scores can include half-points (0.5) for partial credit.
 
 ### What the Tool Assumes
 
-- **Code is committed:** Only analyzes git-committed files
+- **Code scope:** Analyzes files in the current working tree tracked by git (excluding untracked files and typical vendor directories)
 - **Standard structure:** Recognizes common patterns and files
 - **Search-based detection:** Uses grep and file matching
 - **Static analysis only:** Cannot execute or deeply inspect code

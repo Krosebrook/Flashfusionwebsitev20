@@ -46,8 +46,8 @@
   - **0-25 points:** Prototype (local dev only)
   - **26-35 points:** Dev Preview (dev environments)
   - **36-42 points:** Employee Pilot Ready (internal use with caution)
-  - **43-50 points:** Public Beta Ready (limited public release)
-  - **51+ points:** Production Ready (general availability)
+  - **43-47 points:** Public Beta Ready (limited public release)
+  - **48-50 points:** Production Ready (general availability)
 
   ### Documentation
 

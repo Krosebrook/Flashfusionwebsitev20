@@ -26,7 +26,7 @@ const config = {
 
 // Readiness score thresholds
 const READINESS_THRESHOLDS = {
-  PRODUCTION_READY: 51,
+  PRODUCTION_READY: 48,
   PUBLIC_BETA_READY: 43,
   EMPLOYEE_PILOT_READY: 36,
   DEV_PREVIEW: 26,
@@ -76,8 +76,9 @@ function readFile(filePath) {
 function findFiles(pattern, directory = '.') {
   try {
     const escapedPattern = escapeShellArg(pattern);
+    // Use git ls-files to only search tracked files, excluding node_modules, dist, etc.
     const result = execSync(
-      `find ${directory} -type f -name ${escapedPattern} 2>/dev/null | head -100`,
+      `git ls-files ${directory} | grep ${escapedPattern} 2>/dev/null | head -100`,
       { cwd: config.repoPath, encoding: 'utf8' }
     );
     return result.trim().split('\n').filter(f => f);
@@ -90,8 +91,9 @@ function searchInFiles(pattern, filePattern = '*') {
   try {
     const escapedPattern = escapeShellArg(pattern);
     const escapedFilePattern = escapeShellArg(filePattern);
+    // Use git grep to only search tracked files, with extended regex support
     const result = execSync(
-      `grep -r ${escapedPattern} --include=${escapedFilePattern} . 2>/dev/null | head -50`,
+      `git grep -E ${escapedPattern} -- ${escapedFilePattern} 2>/dev/null | head -50`,
       { cwd: config.repoPath, encoding: 'utf8' }
     );
     return result.trim().split('\n').filter(line => line);
@@ -564,7 +566,8 @@ function auditSecurity() {
   // Check for dependency scanning
   const securityChecks = [
     fileExists('package-lock.json') || fileExists('yarn.lock') || fileExists('pnpm-lock.yaml'),
-    searchInFiles('audit|snyk|dependabot', '.github').length > 0
+    searchInFiles('audit|snyk|dependabot', '.github/**/*.yml').length > 0 || 
+    searchInFiles('audit|snyk|dependabot', '.github/**/*.yaml').length > 0
   ];
   
   if (securityChecks[1]) {
@@ -966,8 +969,8 @@ function generateReport(runtimeResults) {
   console.log('  0-25  → Prototype');
   console.log('  26-35 → Dev Preview');
   console.log('  36-42 → Employee Pilot Ready (with conditions)');
-  console.log('  43-50 → Public Beta Ready');
-  console.log('  51+   → Production Ready');
+  console.log('  43-47 → Public Beta Ready');
+  console.log('  48-50 → Production Ready');
   
   // SECTION E - Immediate Action Plan
   console.log('\n' + '='.repeat(80));

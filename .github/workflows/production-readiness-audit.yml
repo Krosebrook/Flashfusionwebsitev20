@@ -77,7 +77,18 @@ jobs:
           HANDLES_SECRETS: ${{ secrets.HANDLES_SECRETS || 'true' }}
         run: |
           echo "Running production readiness audit..."
-          node production-readiness-audit.js > audit-report.txt 2>&1 || true
+          node production-readiness-audit.js > audit-report.txt 2>&1
+          AUDIT_EXIT_CODE=$?
+          
+          if [ ! -s audit-report.txt ]; then
+            echo "Audit report was not generated or is empty."
+            exit 1
+          fi
+          
+          if [ "$AUDIT_EXIT_CODE" -ne 0 ]; then
+            echo "Production readiness audit script failed with exit code ${AUDIT_EXIT_CODE}."
+            exit "$AUDIT_EXIT_CODE"
+          fi
           
           # Display report
           cat audit-report.txt
@@ -93,8 +104,8 @@ jobs:
       - name: Check for Critical Blockers
         id: check_blockers
         run: |
-          # Count critical blockers
-          CRITICAL_COUNT=$(grep -A 50 "CRITICAL BLOCKERS" audit-report.txt | grep "^  [0-9]" | wc -l || echo "0")
+          # Count critical blockers - only parse the CRITICAL BLOCKERS section
+          CRITICAL_COUNT=$(awk '/CRITICAL BLOCKERS/{flag=1;next}/PUBLIC LAUNCH BLOCKERS/{flag=0}flag' audit-report.txt | grep "^  [0-9]" | wc -l || echo "0")
           echo "critical_count=${CRITICAL_COUNT}" >> $GITHUB_OUTPUT
           
           if [ "$CRITICAL_COUNT" -gt 0 ]; then

@@ -26,8 +26,8 @@ A 1000+ line Node.js script that:
   - 0-25: Prototype (local dev only)
   - 26-35: Dev Preview (dev environments)
   - 36-42: Employee Pilot Ready (internal use with caution)
-  - 43-50: Public Beta Ready (limited public release)
-  - 51+: Production Ready (general availability)
+  - 43-47: Public Beta Ready (limited public release)
+  - 48-50: Production Ready (general availability)
 
 - **Generates Comprehensive Reports** with:
   - Scorecard table showing all category scores
@@ -202,7 +202,7 @@ Harden for external users:
 - Complete backup strategy
 - Document incident procedures
 
-### Phase 4: Production Ready (→ 51+ points)
+### Phase 4: Production Ready (→ 48-50 points)
 Achieve production excellence:
 - Add circuit breakers
 - Implement caching
