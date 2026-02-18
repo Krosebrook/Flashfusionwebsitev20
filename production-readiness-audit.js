@@ -780,7 +780,6 @@ async function performRuntimeChecks() {
       };
     }
     
-    const findings = [];
     const escapedUrl = escapeShellArg(config.deploymentUrl);
     
     // Use curl since fetch might not be available
