@@ -856,6 +856,7 @@ export function RepositoryServiceHub() {
         </Dialog>
       </div>
     </div>
+  </div>
   );
 }
 
