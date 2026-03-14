@@ -452,7 +452,6 @@ const FlashFusionBusinessIntelligenceHub: React.FC = () => {
                   Enterprise Operations Command Center | Real-Time Analytics & Intelligence
                 </p>
               </div>
-              </div>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 ff-stagger-fade">
                 <Badge className="ff-badge-success ff-hover-glow">
                   <ProfessionalIcon 
@@ -527,8 +526,7 @@ const FlashFusionBusinessIntelligenceHub: React.FC = () => {
           <Suspense fallback={<LoadingState message="Loading analytics data..." />}>
             {isLoading ? (
               <LoadingState message="Updating dashboard..." />
-            ) : (
-              {/* SYSTEM OVERVIEW */}
+            ) : (<>
               {activeView === 'overview' && (
                 <section className="space-y-6 ff-stagger-fade" aria-labelledby="overview-heading">
                   <h2 id="overview-heading" className="sr-only">Business Intelligence Overview</h2>
@@ -575,8 +573,6 @@ const FlashFusionBusinessIntelligenceHub: React.FC = () => {
                     <div className="ff-text-title text-2xl">{businessMetrics.averageROI}%</div>
                     <div className="text-sm text-primary">Cross-platform performance</div>
                   </div>
-                </CardContent>
-              </Card>
 
               <Card className="ff-card-interactive">
                 <CardContent className="p-6">
@@ -603,7 +599,6 @@ const FlashFusionBusinessIntelligenceHub: React.FC = () => {
                   </div>
                 </CardContent>
               </Card>
-            </div>
 
                   {/* ERP SYSTEMS STATUS */}
                   <Card className="ff-card ff-hover-lift">
@@ -792,7 +787,9 @@ const FlashFusionBusinessIntelligenceHub: React.FC = () => {
                       </CardContent>
                     </Card>
                   </div>
-          </div>
+                </section>
+              )}
+            </>
         )}
 
         {/* ERP SYSTEMS DETAILED VIEW */}
@@ -1115,10 +1112,11 @@ const FlashFusionBusinessIntelligenceHub: React.FC = () => {
                 </CardContent>
               </Card>
               </div>
-            )}
-          )}
+          </div>
+        )}
         </Suspense>
       </main>
+    </div>
     </ErrorBoundary>
   );
 };

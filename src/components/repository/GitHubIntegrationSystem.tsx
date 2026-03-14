@@ -693,6 +693,7 @@ export function GitHubIntegrationSystem() {
         )}
       </div>
     </div>
+  </div>
   );
 }
 

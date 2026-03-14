@@ -830,6 +830,7 @@ const Analytics = lazy(() => import('./components/Analytics'));`
         </Tabs>
       </div>
     </div>
+  </div>
   );
 }
 

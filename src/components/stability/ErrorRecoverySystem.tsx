@@ -799,11 +799,11 @@ export function ErrorRecoverySystem() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-sm text-muted-foreground">Detection Speed</span>
-                    <span className="font-medium"><5s</span>
+                    <span className="font-medium">{'<'}5s</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-sm text-muted-foreground">Recovery Speed</span>
-                    <span className="font-medium"><30s</span>
+                    <span className="font-medium">{'<'}30s</span>
                   </div>
                 </div>
               </CardContent>

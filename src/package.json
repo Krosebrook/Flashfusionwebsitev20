@@ -54,13 +54,15 @@
         "zod": "*"
     },
     "devDependencies": {
-        "@storybook/react": "*",
-        "@storybook/test": "*",
+        "@storybook/react": "^8.6.18",
+        "@storybook/test": "^8.6.18",
         "@testing-library/jest-dom": "*",
         "@testing-library/react": "*",
         "@types/node": "^20.10.0",
-        "@vitejs/plugin-react": "*",
+        "@vitejs/plugin-react": "^5.1.4",
         "@vitejs/plugin-react-swc": "^3.10.2",
+        "jsdom": "*",
+        "typescript": "^5",
         "vite": "6.3.5",
         "vitest": "*"
     },

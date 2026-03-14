@@ -1196,7 +1196,7 @@ export function DevelopmentPhaseTimeline({}: DevelopmentPhaseTimelineProps) {
                     Team Utilization
                   </h4>
                   <div className="space-y-4">
-                    {Object.entries(resourceAllocation.teamUtilization).map(([role, utilization}) => (
+                    {Object.entries(resourceAllocation.teamUtilization).map(([role, utilization]) => (
                       <div key={role} className="space-y-2">
                         <div className="flex items-center justify-between">
                           <span className="ff-text-sm text-[var(--ff-text-primary)]">{role}</span>
