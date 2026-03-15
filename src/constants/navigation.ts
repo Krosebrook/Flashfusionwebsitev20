@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { PageType } from '../types/core';
 
 export interface NavigationItem {

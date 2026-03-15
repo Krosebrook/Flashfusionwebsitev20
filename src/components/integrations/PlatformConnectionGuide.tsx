@@ -36,7 +36,7 @@ import {
   Clock,
   Shield,
   Webhook,
-  Git,
+  GitBranch as Git,
   Download,
   Upload,
   Settings,

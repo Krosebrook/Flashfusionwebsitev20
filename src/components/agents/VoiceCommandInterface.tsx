@@ -8,7 +8,7 @@ import {
   MicOff, 
   Volume2, 
   VolumeX,
-  Waveform,
+  Activity as Waveform,
   MessageSquare,
   Clock,
   CheckCircle2,

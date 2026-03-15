@@ -23,6 +23,10 @@ export interface UserStats {
   achievements: Achievement[];
   weeklyProgress: number;
   monthlyProgress: number;
+  totalImages?: number;
+  totalCode?: number;
+  dailyTasksCompleted?: number;
+  badges?: Achievement[];
 }
 
 export interface Achievement {
@@ -324,3 +328,5 @@ export * from './marketplace';
 export * from './project';
 export * from './system';
 export * from './multi-agent-orchestration';
+// Resolve FeatureFlag ambiguity between core and multi-agent-orchestration
+export type { FeatureFlag } from './core';

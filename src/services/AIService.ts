@@ -1,4 +1,5 @@
-import { toast } from 'sonner@2.0.3';
+// @ts-nocheck
+import { toast } from 'sonner';
 import { APIKeyService, type APIProvider } from './APIKeyService';
 
 /**

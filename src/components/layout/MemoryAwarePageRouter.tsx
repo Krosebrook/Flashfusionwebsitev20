@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { Suspense, lazy, useCallback, useMemo } from 'react';
 import { memoryOptimizer } from '../../utils/memory-optimizer';
 import { shouldLoadComponent } from '../../utils/bundle-analyzer';

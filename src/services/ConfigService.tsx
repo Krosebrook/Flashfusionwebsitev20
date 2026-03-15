@@ -3,7 +3,7 @@ import { getEnvironmentMode, getEnvironmentVariable, isDevelopment, isProduction
 
 export interface AppConfig {
   // Environment
-  environment: 'development' | 'staging' | 'production';
+  environment: 'development' | 'staging' | 'production' | 'test';
   version: string;
   buildTime: string;
   
@@ -241,7 +241,7 @@ export class ConfigService {
 
   private getEnvironmentOverrides(): Partial<AppConfig> {
     const overrides: Partial<AppConfig> = {};
-    const env = getEnvironmentMode();
+    const env = getEnvironmentMode() as 'development' | 'production' | 'staging' | 'test';
 
     // Production overrides
     if (env === 'production') {
@@ -278,7 +278,9 @@ export class ConfigService {
           ui: {
             theme: preferences.theme || defaultConfig.ui.theme,
             animations: preferences.animations ?? defaultConfig.ui.animations,
-            reducedMotion: preferences.reducedMotion ?? defaultConfig.ui.reducedMotion
+            reducedMotion: preferences.reducedMotion ?? defaultConfig.ui.reducedMotion,
+            pageTransitions: preferences.pageTransitions ?? defaultConfig.ui.pageTransitions,
+            loadingDelay: preferences.loadingDelay ?? defaultConfig.ui.loadingDelay
           }
         };
       }

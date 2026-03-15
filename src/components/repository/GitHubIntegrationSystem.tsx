@@ -30,7 +30,7 @@ import {
   Workflow,
   Play,
   Pause,
-  Stop,
+  Square as Stop,
   RefreshCw,
   CheckCircle,
   XCircle,

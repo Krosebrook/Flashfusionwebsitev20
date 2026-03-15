@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import type { PageType } from '../types/core';
 

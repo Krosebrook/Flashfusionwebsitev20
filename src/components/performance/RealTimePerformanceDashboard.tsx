@@ -22,7 +22,7 @@ import {
   CheckCircle,
   Clock,
   BarChart3,
-  Refresh
+  RefreshCw as Refresh
 } from 'lucide-react';
 
 interface PerformanceMetric {

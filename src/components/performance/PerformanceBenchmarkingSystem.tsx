@@ -22,7 +22,7 @@ import {
   Zap,
   Timer,
   Database,
-  Memory,
+  HardDrive as Memory,
   Network,
   Cpu,
   HardDrive,
