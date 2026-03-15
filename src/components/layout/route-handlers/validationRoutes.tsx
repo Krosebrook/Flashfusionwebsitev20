@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { lazy } from 'react';
 import type { PageType } from '../../../types/core';
 

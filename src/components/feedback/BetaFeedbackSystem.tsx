@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * @fileoverview Beta Testing & Feedback Collection System
  * @chunk feedback

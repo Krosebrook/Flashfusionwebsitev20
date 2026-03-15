@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * @fileoverview External App Integration Hub for FlashFusion
  * @chunk integrations

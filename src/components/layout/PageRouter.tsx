@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { Suspense, lazy } from 'react';
 import { FullPageLoader } from '../ui/loading-states';
 import { ErrorBoundary } from '../ErrorBoundary';

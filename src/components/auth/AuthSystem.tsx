@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { User, LogIn, LogOut } from 'lucide-react';

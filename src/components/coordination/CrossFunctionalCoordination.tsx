@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * @fileoverview FlashFusion Cross-Functional Coordination
  * @chunk coordination

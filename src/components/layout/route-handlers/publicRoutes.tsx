@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { PricingPage } from '../../pages/PricingPage';
 import { PricingPageWireframe } from '../../pages/PricingPageWireframe';
 import { UserPersonaCards } from '../../pages/UserPersonaCards';

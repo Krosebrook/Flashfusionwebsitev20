@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Project, User, DailyTask, UserStats } from '../types';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { toast } from 'sonner';

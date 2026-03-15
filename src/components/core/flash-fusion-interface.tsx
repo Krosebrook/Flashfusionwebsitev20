@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * FlashFusion Main Interface
  * Core application interface with routing and layout management

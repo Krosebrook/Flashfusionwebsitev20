@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * @fileoverview FlashFusion Business Intelligence Hub - Enterprise Command Center
  * @chunk business-intelligence

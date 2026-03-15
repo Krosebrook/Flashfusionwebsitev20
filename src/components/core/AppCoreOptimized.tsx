@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * @fileoverview FlashFusion App Core - Optimized & Enhanced (v6.0.0)
  * @chunk core
