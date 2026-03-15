@@ -3,6 +3,12 @@
  * Automatically manages cache size based on available memory
  */
 
+declare global {
+  interface Performance {
+    memory?: { percentage?: number; usedJSHeapSize?: number; totalJSHeapSize?: number; jsHeapSizeLimit?: number };
+  }
+}
+
 import { memoryOptimizer } from './memory-optimizer';
 
 interface CacheEntry<T> {

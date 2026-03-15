@@ -167,6 +167,8 @@ export function getEnvironmentConfig(): EnvironmentConfig {
 /**
  * Safely get environment variable
  */
+export function getEnvironmentVariable(key: string, defaultValue: string): string;
+export function getEnvironmentVariable(key: string, defaultValue?: string): string | undefined;
 export function getEnvironmentVariable(key: string, defaultValue?: string): string | undefined {
   try {
     // Try import.meta.env first
@@ -219,7 +221,7 @@ export function isNode(): boolean {
 export function isWebWorker(): boolean {
   return typeof self !== 'undefined' && 
          typeof window === 'undefined' && 
-         typeof importScripts === 'function';
+         typeof (globalThis as { importScripts?: unknown }).importScripts === 'function';
 }
 
 /**

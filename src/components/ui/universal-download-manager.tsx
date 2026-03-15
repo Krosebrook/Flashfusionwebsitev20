@@ -15,7 +15,7 @@ import {
   FileText, 
   Code, 
   Settings, 
-  Docker, 
+  Dock as Docker, 
   Github, 
   Package,
   Folder,
@@ -31,7 +31,7 @@ import {
   ExternalLink,
   Upload
 } from 'lucide-react';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 

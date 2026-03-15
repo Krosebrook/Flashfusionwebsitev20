@@ -34,7 +34,7 @@ import {
   Plus,
   Trash2,
   Edit3,
-  Legal
+  Scale as Legal
 } from 'lucide-react';
 
 interface ContentItem {

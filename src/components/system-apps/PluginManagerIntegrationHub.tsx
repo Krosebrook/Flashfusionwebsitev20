@@ -14,7 +14,7 @@ import {
   Power, AlertCircle, Check, X, RefreshCw, Eye,
   Package, Shield, Zap, Code, Palette, Database,
   Cloud, Globe, Users, TrendingUp, Clock, ChevronRight,
-  Github, Slack, Discord, Twitter, Facebook, Figma,
+  Github, Slack, MessageCircle as Discord, Twitter, Facebook, Figma,
   ExternalLink, Play, Pause, Trash2, Upload, HelpCircle
 } from 'lucide-react';
 import { toast } from 'sonner';

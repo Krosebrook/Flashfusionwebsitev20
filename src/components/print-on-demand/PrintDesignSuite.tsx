@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Progress } from '../ui/progress';
 import { Slider } from '../ui/slider';
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 import { 
   Palette, 
   Type, 
@@ -52,7 +52,7 @@ import {
   ArrowDown,
   Move,
   RotateCw,
-  Flip,
+  FlipHorizontal as Flip,
   Maximize,
   Minimize
 } from 'lucide-react';

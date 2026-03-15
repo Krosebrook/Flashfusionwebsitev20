@@ -64,7 +64,7 @@ export class PerformanceMonitor {
           entries.forEach((entry) => {
             const navEntry = entry as PerformanceNavigationTiming;
             this.recordMetric('navigation', {
-              loadTime: navEntry.loadEventEnd - navEntry.navigationStart,
+              loadTime: navEntry.loadEventEnd - ((navEntry as PerformanceNavigationTiming & { navigationStart?: number }).navigationStart ?? 0),
               renderTime: navEntry.domContentLoadedEventEnd - navEntry.domContentLoadedEventStart,
               interactionTime: navEntry.loadEventEnd - navEntry.loadEventStart
             });
