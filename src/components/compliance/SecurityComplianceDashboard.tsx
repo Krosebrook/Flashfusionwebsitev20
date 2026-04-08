@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * @fileoverview FlashFusion Security & Compliance Dashboard
  * @chunk compliance

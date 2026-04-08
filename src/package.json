@@ -54,27 +54,18 @@
         "zod": "*"
     },
     "devDependencies": {
-        "@storybook/react": "^8.6.18",
-        "@storybook/test": "^8.6.18",
+        "@storybook/react": "*",
+        "@storybook/test": "*",
         "@testing-library/jest-dom": "*",
         "@testing-library/react": "*",
-        "@types/file-saver": "^2.0.7",
         "@types/node": "^20.10.0",
-        "@types/react": "^18.3.28",
-        "@types/react-dom": "^18.3.7",
-        "@types/react-syntax-highlighter": "^15.5.13",
-        "@vitejs/plugin-react": "^5.1.4",
+        "@vitejs/plugin-react": "*",
         "@vitejs/plugin-react-swc": "^3.10.2",
-        "jsdom": "*",
-        "typescript": "^5",
         "vite": "6.3.5",
         "vitest": "*"
     },
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
-        "test": "vitest run --config vitest.config.ts",
-        "test:watch": "vitest --config vitest.config.ts",
-        "typecheck": "tsc --noEmit --project tsconfig.json"
+        "build": "vite build"
     }
 }

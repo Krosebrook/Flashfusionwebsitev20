@@ -30,7 +30,7 @@ import {
   Workflow,
   Play,
   Pause,
-  Square as Stop,
+  Stop,
   RefreshCw,
   CheckCircle,
   XCircle,
@@ -693,7 +693,6 @@ export function GitHubIntegrationSystem() {
         )}
       </div>
     </div>
-  </div>
   );
 }
 

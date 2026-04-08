@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useCallback, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { Button } from '../../ui/button';
@@ -22,7 +21,7 @@ import {
   Clock,
   Target
 } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from 'sonner@2.0.3';
 import AIService from '../../../services/AIService';
 
 interface IntegrationTesterProps {

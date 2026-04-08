@@ -8,7 +8,7 @@ import { ScrollArea } from '../ui/scroll-area';
 import { Progress } from '../ui/progress';
 import { 
   Brain, AlertTriangle, CheckCircle, Info, Zap, 
-  Code, Shield, Gauge as Performance, Accessibility, 
+  Code, Shield, Performance, Accessibility, 
   TrendingUp, Bug, Lightbulb, FileCode
 } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';

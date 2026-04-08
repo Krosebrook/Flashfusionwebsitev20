@@ -66,7 +66,7 @@ import {
   Trash2,
   Plus,
   Filter,
-  ArrowUpDown as Sort,
+  Sort,
   Grid,
   List,
   ChevronLeft,

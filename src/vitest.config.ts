@@ -7,7 +7,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: ['./test/setup.ts'],
+    setupFiles: ['./src/test/setup.ts'],
     css: true,
     coverage: {
       reporter: ['text', 'json', 'html'],
@@ -22,7 +22,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, '.'),
+      '@': path.resolve(__dirname, './src'),
     },
   },
 })

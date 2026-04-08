@@ -3,12 +3,6 @@
  * Reuses React components to reduce memory allocation/deallocation
  */
 
-declare global {
-  interface Performance {
-    memory?: { percentage?: number; usedJSHeapSize?: number; totalJSHeapSize?: number; jsHeapSizeLimit?: number };
-  }
-}
-
 import React, { ComponentType, ReactElement } from 'react';
 import { memoryOptimizer } from './memory-optimizer';
 

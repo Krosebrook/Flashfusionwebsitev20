@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
@@ -42,7 +41,7 @@ import {
   DollarSign,
   Activity
 } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from 'sonner@2.0.3';
 import AIService, { type AIModel, type AIProvider, AI_MODELS } from '../../services/AIService';
 
 interface ModelCapability {

@@ -218,4 +218,3 @@ export interface CrossProjectSynergy {
 export type SynergyType = 
   | 'knowledge_transfer' | 'resource_sharing' | 'component_reuse'
   | 'technical_alignment' | 'skill_development' | 'risk_mitigation';
-export type { Project } from './project';

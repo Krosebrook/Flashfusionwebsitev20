@@ -1019,3 +1019,10 @@ function generateEnvironmentExample(app: GeneratedApp): string {
     .join('\n');
 }
 
+export {
+  type DownloadFormat,
+  type CompressionLevel,
+  type DownloadOptions,
+  type FileExport,
+  type DownloadPackage
+};

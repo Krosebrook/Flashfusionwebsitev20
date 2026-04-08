@@ -1,7 +1,6 @@
-// @ts-nocheck
 import { Project, User, DailyTask, UserStats } from '../types';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
-import { toast } from 'sonner';
+import { toast } from 'sonner@2.0.3';
 
 // Real Supabase database service
 export const projectService = {

@@ -4,7 +4,7 @@ export type PageType = 'home' | 'dashboard' | 'tools' | 'projects' | 'deployment
                        'settings' | 'about' | 'pricing' | 'pricing-wireframe' | 'user-personas' | 'contact' | 'ai-models' | 
                        'live-collaboration' | 'cicd-pipeline' | 'responsive-ui-kit' | 'backend-architecture' | 'infrastructure-strategy' |
                        'notifications' | 'profile' | 'search' | 'plugins' | 'data-hub' | 'insights' | 'business-intelligence' | 'workspace' | 'external-integrations' | 'repository-hub' |
-                       'creator-hub' | 'creator-content-pipeline' | 'creator-commerce' | 'brand-kit' | 'content-creation' | 'education' | 'multi-agent-orchestration';
+                       'creator-hub' | 'creator-content-pipeline' | 'creator-commerce' | 'brand-kit' | 'content-creation' | 'education';
 
 export interface User {
   id: string;

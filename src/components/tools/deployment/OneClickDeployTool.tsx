@@ -66,8 +66,8 @@ import {
   Lock,
   FlaskConical
 } from 'lucide-react';
-import { toast } from 'sonner';
-import { aiServiceManager } from '../../../services/AIServiceManager';
+import { toast } from 'sonner@2.0.3';
+import { aiServiceManager } from '../../services/AIServiceManager';
 
 /**
  * Deployment Platform Configuration

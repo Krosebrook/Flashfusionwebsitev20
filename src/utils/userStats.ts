@@ -6,13 +6,6 @@ export const createUserStats = (userRole?: string, credits?: number): UserStats 
   xp: userRole === 'pro' ? 2450 : 820, // Realistic XP progression
   xpToNext: userRole === 'pro' ? 3200 : 1000, // Achievable XP targets
   totalProjects: userRole === 'pro' ? 15 : 4, // Realistic project counts
-  activeProjects: userRole === 'pro' ? 5 : 2,
-  completedTasks: userRole === 'pro' ? 42 : 12,
-  subscription: userRole === 'pro' ? 'pro' : 'free',
-  joinDate: new Date(),
-  achievements: [],
-  weeklyProgress: 0,
-  monthlyProgress: 0,
   totalImages: userRole === 'pro' ? 245 : 67, // Realistic image generation
   totalCode: userRole === 'pro' ? 89 : 23, // Realistic code generation
   credits: credits || 150, // Starter credit amount
@@ -98,7 +91,7 @@ export const completeTask = (userStats: UserStats, taskId: string, tasks: any[])
     return {
       ...userStats,
       xp: userStats.xp + task.xpReward,
-      dailyTasksCompleted: (userStats.dailyTasksCompleted ?? 0) + 1
+      dailyTasksCompleted: userStats.dailyTasksCompleted + 1
     };
   }
   return userStats;

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useEffect } from 'react';
 import { DemoBanner } from '../ui/demo-banner';
 import { ConfigDebugPanel } from '../ui/config-debug';

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Button } from '../ui/button';
@@ -11,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Progress } from '../ui/progress';
 import { Slider } from '../ui/slider';
-import { toast } from "sonner";
+import { toast } from "sonner@2.0.3";
 import { 
   Palette, 
   Type, 
@@ -53,7 +52,7 @@ import {
   ArrowDown,
   Move,
   RotateCw,
-  FlipHorizontal as Flip,
+  Flip,
   Maximize,
   Minimize
 } from 'lucide-react';

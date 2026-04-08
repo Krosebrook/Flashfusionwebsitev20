@@ -31,7 +31,7 @@ import {
   Settings,
   Play,
   Pause,
-  Square as Stop,
+  Stop,
   RefreshCw,
   CheckCircle,
   XCircle,
@@ -698,7 +698,6 @@ export function VercelDeploymentSystem() {
         )}
       </div>
     </div>
-  </div>
   );
 }
 

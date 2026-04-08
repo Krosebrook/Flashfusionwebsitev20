@@ -13,7 +13,7 @@ import { Badge } from '../ui/badge';
 import { Input } from '../ui/input';
 import { 
   BookOpen, Users, GraduationCap, Calculator, FileText, 
-  Presentation as PresentationChart, Clipboard, Brain, Search, Filter,
+  PresentationChart, Clipboard, Brain, Search, Filter,
   Star, TrendingUp, Clock, Target, Award, Lightbulb
 } from 'lucide-react';
 

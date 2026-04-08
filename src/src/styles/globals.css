@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Brand Colors */
+    --ff-primary: #FF7B00;
+    --ff-primary-600: #E66F00;
+    --ff-secondary: #00B4D8;
+    --ff-accent: #E91E63;
+    --ff-bg-dark: #0F172A;
+    --ff-surface: #1E293B;
+    --ff-surface-light: #334155;
+    
+    /* Text Colors */
+    --ff-text-primary: #FFFFFF;
+    --ff-text-secondary: #CBD5E1;
+    --ff-text-muted: #94A3B8;
+    
+    /* Error Colors */
+    --ff-error-500: #EF4444;
+    --ff-error-600: #DC2626;
+    
+    /* UI Elements */
+    --ff-border: rgba(255, 255, 255, 0.1);
+    
+    /* Spacing */
+    --ff-space-2: 0.5rem;
+    --ff-space-3: 0.75rem;
+    --ff-space-4: 1rem;
+    --ff-space-6: 1.5rem;
+    --ff-space-8: 2rem;
+    
+    /* Typography */
+    --ff-font-primary: 'Sora', sans-serif;
+    --ff-font-secondary: 'Inter', sans-serif;
+    --ff-font-mono: 'JetBrains Mono', monospace;
+    
+    --ff-text-sm: 0.875rem;
+    --ff-text-base: 1rem;
+    --ff-text-lg: 1.125rem;
+    --ff-text-xl: 1.25rem;
+    --ff-text-2xl: 1.5rem;
+    --ff-text-3xl: 1.875rem;
+    
+    --ff-weight-medium: 500;
+    --ff-weight-semibold: 600;
+    --ff-weight-bold: 700;
+    
+    --ff-leading-tight: 1.25;
+    --ff-leading-relaxed: 1.625;
+    
+    /* Radius */
+    --ff-radius: 0.5rem;
+    --ff-radius-lg: 0.75rem;
+    
+    /* Shadows & Effects */
+    --ff-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --ff-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --ff-glow: 0 0 15px rgba(255, 123, 0, 0.5);
+  }
+
+  body {
+    background-color: var(--ff-bg-dark);
+    color: var(--ff-text-primary);
+    font-family: var(--ff-font-secondary);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--ff-font-primary);
+  }
+}
+
+@layer utilities {
+  .ff-focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-[var(--ff-primary)] focus:ring-offset-2 focus:ring-offset-[var(--ff-bg-dark)];
+  }
+
+  .ff-card-interactive {
+    @apply transition-all duration-300 hover:transform hover:translate-y-[-2px] hover:shadow-[var(--ff-glow)];
+  }
+
+  .ff-btn-primary {
+    @apply bg-[var(--ff-primary)] text-white hover:bg-[var(--ff-primary-600)] transition-colors duration-200 rounded-[var(--ff-radius)] px-4 py-2 font-[var(--ff-font-primary)] font-semibold;
+  }
+  
+  .ff-text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[var(--ff-primary)] via-[var(--ff-secondary)] to-[var(--ff-accent)];
+  }
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 0 0 rgba(255, 123, 0, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 123, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 123, 0, 0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}

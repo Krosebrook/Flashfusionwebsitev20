@@ -8,13 +8,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { ScrollArea } from '../ui/scroll-area';
 import { 
   Users, MessageSquare, Eye, Edit3, Share2, 
-  Save, Play, GitBranch, Clock, MousePointer as Cursor, 
+  Save, Play, GitBranch, Clock, Cursor, 
   FileText, Code, Settings, Bell, Video,
   Mic, MicOff, VideoOff, Phone, PhoneOff
 } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { toast } from 'sonner';
+import { toast } from 'sonner@2.0.3';
 
 interface CollaboratorPresence {
   id: string;

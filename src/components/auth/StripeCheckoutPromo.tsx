@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * @fileoverview FlashFusion Stripe Checkout with Promotional Pricing
  * @chunk stripe-checkout

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * @fileoverview Professional Icon System for FlashFusion
  * @chunk ui-system

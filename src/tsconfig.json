@@ -43,13 +43,6 @@
   "exclude": [
     "node_modules",
     "dist",
-    "build",
-    "packages",
-    "supabase/functions",
-    "Dockerfile",
-    "_env_example.tsx",
-    "database/schema_sql.tsx",
-    "main.ts",
-    "preview.ts"
+    "build"
   ]
 }

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * @fileoverview Beta Testing & Feedback Collection System
  * @chunk feedback
@@ -55,7 +54,7 @@ import {
   ThumbsDown,
   Heart
 } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from 'sonner@2.0.3';
 
 interface FeedbackItem {
   id: string;

@@ -42,6 +42,7 @@ import {
   Copy,
   Download,
   Upload,
+  Sync,
   Webhook,
   Key,
   Lock,
@@ -473,7 +474,7 @@ export function RepositoryServiceHub() {
                     </p>
                   </div>
                   <ProfessionalIcon 
-                    icon={RefreshCw} 
+                    icon={Sync} 
                     size="md" 
                     variant="functional" 
                     context="accent"
@@ -855,7 +856,6 @@ export function RepositoryServiceHub() {
         </Dialog>
       </div>
     </div>
-  </div>
   );
 }
 

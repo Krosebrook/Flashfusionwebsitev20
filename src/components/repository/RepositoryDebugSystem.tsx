@@ -45,7 +45,7 @@ import {
   Minus,
   Play,
   Pause,
-  Square as Stop,
+  Stop,
   Zap,
   Activity,
   BarChart3,
@@ -80,7 +80,7 @@ import {
   ChevronDown,
   ChevronUp,
   Info,
-  AlertTriangle as Warning,
+  Warning,
   Target,
   Crosshair,
   Wrench,
@@ -830,7 +830,6 @@ const Analytics = lazy(() => import('./components/Analytics'));`
         </Tabs>
       </div>
     </div>
-  </div>
   );
 }
 

@@ -28,7 +28,7 @@ import { Separator } from '../ui/separator';
 import { ScrollArea } from '../ui/scroll-area';
 import { 
   BookOpen, Users, GraduationCap, ShoppingBag, Brain, 
-  FileText, Presentation as PresentationChart, Clipboard, MessageSquare, 
+  FileText, PresentationChart, Clipboard, MessageSquare, 
   Target, Lightbulb, Download, Share2, Star, Zap,
   School, Calculator, Globe, Palette, Music, Beaker,
   History, Languages, Heart, Trophy, Puzzle, MapPin

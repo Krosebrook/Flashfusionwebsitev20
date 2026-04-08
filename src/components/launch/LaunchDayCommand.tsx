@@ -40,7 +40,7 @@ import {
   Network,
   Monitor
 } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from 'sonner@2.0.3';
 import { analyticsService } from '../../services/AnalyticsService';
 
 interface LaunchChecklist {
@@ -856,7 +856,7 @@ export function LaunchDayCommand() {
                       </div>
                       <p className="text-2xl font-bold">{currentMetrics.performance.responseTime.toFixed(0)}ms</p>
                       <Progress value={Math.max(0, 100 - (currentMetrics.performance.responseTime / 5))} className="h-2" />
-                      <p className="text-xs text-muted-foreground">Target: {'<'}200ms</p>
+                      <p className="text-xs text-muted-foreground">Target: <200ms</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -884,7 +884,7 @@ export function LaunchDayCommand() {
                       </div>
                       <p className="text-2xl font-bold">{currentMetrics.performance.errorRate.toFixed(2)}%</p>
                       <Progress value={Math.max(0, 100 - (currentMetrics.performance.errorRate * 20))} className="h-2" />
-                      <p className="text-xs text-muted-foreground">Target: {'<'}1%</p>
+                      <p className="text-xs text-muted-foreground">Target: <1%</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -980,7 +980,7 @@ export function LaunchDayCommand() {
                         </div>
                         <div className="flex justify-between">
                           <span>Response Time</span>
-                          <span className="font-medium">{'<'}2min</span>
+                          <span className="font-medium"><2min</span>
                         </div>
                       </div>
                     </div>

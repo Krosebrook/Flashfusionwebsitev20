@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { handlePublicRoutes, publicRoutes } from './publicRoutes';
 import { handleCreatorRoutes, creatorRoutes } from './creatorRoutes';
 import { handleValidationRoutes, validationRoutes } from './validationRoutes';

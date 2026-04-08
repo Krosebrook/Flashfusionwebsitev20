@@ -7,7 +7,7 @@
 
 // Safe stub implementations
 export const memoryOptimizer = {
-  getMemoryStats: (): null | { percentage: number; usedJSHeapSize?: number; totalJSHeapSize?: number; jsHeapSizeLimit?: number } => null,
+  getMemoryStats: () => null,
   cleanup: () => {},
   initialize: () => {},
   destroy: () => {}

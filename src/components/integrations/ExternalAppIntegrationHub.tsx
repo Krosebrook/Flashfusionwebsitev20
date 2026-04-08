@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * @fileoverview External App Integration Hub for FlashFusion
  * @chunk integrations
@@ -35,7 +34,8 @@ import {
   Code,
   Download,
   Upload,
-  RefreshCw as Sync,
+  Sync,
+  CheckCircle,
   AlertCircle,
   XCircle,
   Eye,

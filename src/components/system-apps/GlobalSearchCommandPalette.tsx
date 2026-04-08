@@ -548,7 +548,7 @@ export function GlobalSearchCommandPalette({
               <Search className="w-8 h-8 mx-auto mb-3 text-muted-foreground opacity-50" />
               <p className="text-sm text-muted-foreground mb-2">No results found for "{query}"</p>
               <p className="text-xs text-muted-foreground">
-                Try searching for tools, projects, or type {'>'} for commands
+                Try searching for tools, projects, or type '>' for commands
               </p>
             </div>
           )}
@@ -571,7 +571,7 @@ export function GlobalSearchCommandPalette({
                 Close
               </span>
             </div>
-            <span>Type {'>'} for commands • Ctrl+K to open</span>
+            <span>Type '>' for commands • Ctrl+K to open</span>
           </div>
         </div>
       </div>
